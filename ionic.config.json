@@ -1,0 +1,7 @@
+{
+  "name": "ceradentappadmin",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

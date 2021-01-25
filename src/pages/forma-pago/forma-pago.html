@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Forma de Pago</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+  
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12> 
+        <ion-card>
+          <ion-card-header>
+            Monto total: S/. {{montoTotal}}
+          </ion-card-header>          
+        </ion-card>
+        
+        <form  [formGroup]="formapagoForm " (ngSubmit)="onSubmit()">
+        <ion-card padding no-margin margin-bottom class="full-width">          
+          <ion-item>
+            <ion-label stacked>Monto efectivo S/. (*)</ion-label>
+            <ion-input type="number" formControlName="efectivo" [(ngModel)]="montoEfectivo" (keyup)="validarEfectivo($event)" placeholder="0"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="formapagoForm.get('efectivo').errors && formapagoForm.get('efectivo').dirty">
+            <p color="danger" ion-text *ngIf="formapagoForm.get('efectivo').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="formapagoForm.get('efectivo').hasError('max')">El monto a pagar no puede ser mayor al monto de venta</p>            
+          </ion-item> 
+          <ion-item no-lines *ngIf="errorEfectivo">
+            <p color="danger" ion-text>Este valor exede al valor de venta</p>            
+          </ion-item> 
+          <ion-item>
+            <ion-label stacked>Monto Tarjeta S/. (*) </ion-label>
+            <ion-input type="number" formControlName="tarjeta" [(ngModel)]="montoTarjeta" (keyup)="validarTarjeta($event)" placeholder="0"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="formapagoForm.get('tarjeta').errors && formapagoForm.get('tarjeta').dirty">
+            <p color="danger" ion-text *ngIf="formapagoForm.get('tarjeta').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="formapagoForm.get('tarjeta').hasError('max')">El monto a pagar no puede ser mayor al monto de venta</p>            
+          </ion-item>   
+          <ion-item no-lines *ngIf="errorTarjeta">
+            <p color="danger" ion-text>Este valor exede al valor de venta</p>            
+          </ion-item>    
+          <ion-item>
+            <ion-label stacked>Tipo recibo</ion-label>
+            <ion-select formControlName="tipo_recibo">
+              <ion-option value="Boleta">Boleta</ion-option>
+              <ion-option value="Nota de pedido">Nota de Pedido</ion-option>
+              <ion-option value="Otro">Otro</ion-option>
+            </ion-select>
+          </ion-item>  
+          <ion-item>
+            <ion-label stacked>Nro recibo</ion-label>
+            <ion-input type="text" formControlName="nro_recibo" placeholder="000001"></ion-input>
+          </ion-item> 
+                     
+        </ion-card>
+
+        <button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!formapagoForm.valid || errorEfectivo || errorTarjeta" round tappable>
+          Registrar Venta
+        </button>
+        </form>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

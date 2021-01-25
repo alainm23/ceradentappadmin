@@ -1,0 +1,320 @@
+<!--
+  Generated template for the PagesReservaDetallePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Reserva detalle | {{ doctor?.nombres }} {{ doctor?.apellidos }} | {{ get_fecha_format (reserva?.fecha_registrada) }}</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only>
+        <ion-icon name="trash"></ion-icon>
+      </button>
+
+      <button (click)="registrar_venta ()" ion-button icon-only>
+        <ion-icon name="add-circle"></ion-icon>
+        &nbsp;
+        Generar venta
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-6>
+        <ion-card>
+          <ion-card-header color="primary">
+            Tomografia volumétrica
+          </ion-card-header>
+
+          <ion-list>
+            <ion-list-header>
+              Sin análisis (solo CD)
+            </ion-list-header>
+            <ion-item>
+              <ion-label>Senos maxilares</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.senos_maxilares" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>ATM (B.abierta / B. Cerrada)</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.atm_b_abierta_b_cerrada" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+
+            <ion-list-header>
+              Con análisis
+            </ion-list-header>
+            <ion-item>
+              <ion-label>Area patológica</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.area_patologica" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Localización de conducto</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.localizacion_conductos" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+
+            <ion-list-header>
+              Derechos
+            </ion-list-header>
+            <ion-item *ngFor="let item of reserva?.servicio_extras?.tomografia_volumetrica_derecho">
+              - {{ item }}
+            </ion-item>
+
+            <ion-list-header>
+              Izquierdos
+            </ion-list-header>
+            <ion-item *ngFor="let item of reserva?.servicio_extras?.tomografia_volumetrica_izq">
+              - {{ item }}
+            </ion-item>
+
+            <ion-list-header>
+              Observacion
+            </ion-list-header>
+            <ion-item>
+              <!-- {{ reserva?.servicio?.tomografía_volumetrica_observacion }} -->
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+
+      <ion-col col-6>
+        <ion-card>
+          <ion-card-header color="primary">
+            Radiografias extra orales digitales
+          </ion-card-header>
+
+          <ion-list>
+            <ion-item>
+              <ion-label>Panorámica sola</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.panoramica_sola" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Panorámica con informe</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.panoramica_con_informe" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Panorámica con informe + CD</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.panoramica_informe_cd" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Panorámica + 2 periapicales + 2 bite wing</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.panoramica_periapicales_bite_wing" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>ATM (B.abierta / B. Cerrada)</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.radio_ext_orl_atm_b_abierta_b_cerrada" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Carpal</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.carpal" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Carpal con estudio</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.carpal_con_studio" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Postero - anterior</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.posterio_anterior" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Senos maxilares</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.radio_ext_orl_senos_maxilares" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Otros</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.radio_ext_orl_otros" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-list-header *ngIf="reserva.servicio.radio_ext_orl_otros">
+              Observacion
+            </ion-list-header>
+            <ion-item *ngIf="reserva.servicio.radio_ext_orl_otros">
+              {{ reserva.servicio.radio_ext_orl_otros_texto }}
+            </ion-item>
+
+            <ion-list-header>
+              Cefalométrico / Lateral
+            </ion-list-header>
+            <ion-item>
+              <ion-label>Lineal estricta</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.lineal_estricta" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+            <ion-item>
+              <ion-label>Lateral 7ma. vertebra</ion-label>
+              <ion-checkbox [(ngModel)]="reserva.servicio.lateral_7ms" color="dark" checked="true"></ion-checkbox>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+
+      <ion-col col-6>
+        <ion-card>
+          <ion-card-header color="primary">
+            Radiografias intraorales
+          </ion-card-header>
+
+          <ion-list-header>
+            Bitewing / Molares
+          </ion-list-header>
+
+          <ion-item>
+            <ion-label>Derecho</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.bitewing_morales_der" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Izquierdo</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.bitewing_morales_izq" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+
+          <ion-list-header>
+            Bitewing / Premolares
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Derecho</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.bitewing_premolares_der" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Izquierdo</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.bitewing_premolares_izq" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+
+          <ion-list-header>
+            Oclusal
+          </ion-list-header>
+          <ion-item>
+            <ion-label>Superior</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.oclusal_superior" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Inferior</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.oclusal_inferior" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+
+          <ion-list-header>
+            Derechos 01
+          </ion-list-header>
+          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_d_01">
+            - {{ item }}
+          </ion-item>
+
+          <ion-list-header>
+            Izquierdo 01
+          </ion-list-header>
+          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_i_01">
+            - {{ item }}
+          </ion-item>
+
+          <ion-list-header>
+            Derechos 02
+          </ion-list-header>
+          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_d_02">
+            - {{ item }}
+          </ion-item>
+
+          <ion-list-header>
+            Izquierdo 02
+          </ion-list-header>
+          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_i_02">
+            - {{ item }}
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <ion-col col-6>
+        <ion-card>
+          <ion-card-header color="primary">
+            Análisis cefalométrico computarizado
+          </ion-card-header>
+
+          <ion-item>
+            <ion-label>Ricketts</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.ricketts" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Tweed</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.tweed" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>U.S.P - Unicamp</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.u_s_p_0_unicamp" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Steiner</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.steiner" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Roth - Jarabak</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.roth_jarabak" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Bjork - Jarabak</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.bjork_jarabak" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Mc Namara</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.mc_namara" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Schwarz</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.schwarz" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Adenoides</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.adenoides" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Down</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.down" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Vto. De Ricketts</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.vto_de_ricketts" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item *ngIf="reserva.servicio.vto_de_ricketts">
+            {{ reserva.servicio.vto_de_ricketts_anios }} año(s)
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <ion-col col-6>
+        <ion-card>
+          <ion-card-header color="primary">
+            Exámenes complementarios
+          </ion-card-header>
+
+          <ion-list-header>
+            Fotos extra e intraorales
+          </ion-list-header>
+
+          <ion-item>
+            <ion-label>Standar</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.fotos_extra_intraorales_standar" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label>Profesional</ion-label>
+            <ion-checkbox [(ngModel)]="reserva.servicio.fotos_extra_intraorales_profesional" color="dark" checked="true"></ion-checkbox>
+          </ion-item>
+
+          <ion-list-header>
+            Duplicado de estudio y/o radiografía
+          </ion-list-header>
+
+          <ion-item>
+            {{ reserva?.servicio?.duplicado_estudio_texto }}
+          </ion-item>
+
+          <ion-list-header>
+            Documentación completa para Ortodoncia
+          </ion-list-header>
+
+          <ion-item>
+            Pack {{ reserva?.servicio?.doc_completa_orto_pack }}
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

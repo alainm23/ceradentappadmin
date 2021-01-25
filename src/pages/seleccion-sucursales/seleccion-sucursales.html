@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Sucursales que administra</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+  
+  
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>          
+
+        <ion-list>
+          <ion-item *ngFor="let item of listaSucursales | async">
+            <ion-label>{{item.nombre}}</ion-label>
+            <ion-toggle [checked]="verificarSucursal(item.id)" (ionChange)="cambiarSucursal(item.id, $event)"></ion-toggle>                
+          </ion-item>
+        </ion-list>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

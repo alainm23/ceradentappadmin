@@ -1,0 +1,81 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{titulo}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="fondo">
+  <ion-grid style="margin-top:4rem;">
+    <ion-row>
+      <ion-col col-6>  
+      <!--<ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 offset-lg-4 offset-xl-4 offset-md-3>-->
+          
+        <form  [formGroup]="sucursalForm" fireForm path="{{path}}" (stateChange)="changeHandler($event)">
+        <ion-card padding no-margin margin-bottom class="full-width">          
+          <ion-item>
+            <ion-label stacked>Nombre (*)</ion-label>
+            <ion-input type="text" formControlName="nombre" placeholder="Sucursal de Huayruropata"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="sucursalForm.get('nombre').errors && sucursalForm.get('nombre').dirty">
+            <p color="danger" ion-text *ngIf="sucursalForm.get('nombre').hasError('required')">Este campo es obligatorio</p>            
+          </ion-item> 
+          <ion-item>
+            <ion-label stacked>Direccion (*)</ion-label>
+            <ion-input type="text" formControlName="direccion" placeholder="Av. Huayruropata #716"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="sucursalForm.get('direccion').errors && sucursalForm.get('direccion').dirty">
+            <p color="danger" ion-text *ngIf="sucursalForm.get('direccion').hasError('required')">Este campo es obligatorio</p>            
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>celular (*)</ion-label>
+            <ion-input type="text" formControlName="celular" placeholder="984675432"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="sucursalForm.get('celular').errors && sucursalForm.get('celular').dirty">
+            <p color="danger" ion-text *ngIf="sucursalForm.get('celular').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="sucursalForm.get('celular').hasError('pattern')">Solo incluir numeros (9 digitos)</p>            
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Telefono</ion-label>
+            <ion-input type="text" formControlName="telefono" placeholder="(084) 223456"></ion-input>
+          </ion-item>
+        </ion-card>
+
+        <!--<button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!sucursalForm.valid" round tappable>
+          Guardar
+        </button>-->
+        </form>
+        <div *ngIf="state === 'synced'" style="width:100%; background-color:green; color:white; text-align:center; padding:3rem 0rem;">
+            La informacion esta sincronizada con la base de datos
+        </div>
+        
+        <div *ngIf="state === 'modified'" style="width:100%; background-color:orange; color:white; text-align:center; padding:3rem 0rem;">
+            Guardando cambios en la base de datos...
+        </div>
+        <!-- Getting an ERROR Error: ExpressionChangedAfterItHasBeenCheckedError -->
+        <!-- <div *ngIf="state === 'loading'" class="notification is-info">
+            Form data is preloading
+        </div> -->
+        <div *ngIf="state === 'error'" style="width:100%; background-color:red; color:white; text-align:center; padding:3rem 0rem;">
+            Error al guardar la informacion con la base de datos
+        </div> 
+      </ion-col>
+      <ion-col *ngIf="codigoSucursal" col-6>        
+        <ion-card padding no-margin margin-bottom class="full-width">
+          <h3 text-center>Stock</h3>
+          <ion-row *ngFor="let insumo of listaInsumos; let i=index;" style="padding-bottom:0.5rem;" class="cero_distancia">
+            <ion-col class="cero_distancia" size="7" style="font-size:1.2rem; padding-top:2rem;" text-right>{{insumo.nombre}}&nbsp;&nbsp;&nbsp;&nbsp;</ion-col>
+            <ion-col class="cero_distancia" size="3">
+                <ion-input #i maxlength="10" type="number" class="cantidad" placeholder="stock" [value]="cantidadesActuales.get(insumo.id)"></ion-input>
+            </ion-col>
+            <ion-col class="cero_distancia" size="1">
+              <button ion-button icon-start no-margin color="primary" tappable (click)="actualizarStock(i.value, insumo.id)">
+                <ion-icon name="refresh" title="actualizar stock"  style="color:white;"></ion-icon>
+              </button>
+            </ion-col>          
+          </ion-row>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

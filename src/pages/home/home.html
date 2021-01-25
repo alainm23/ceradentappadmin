@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>     
+    <ion-title>
+      Mis Sucursales
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fondo">  
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>     
+      <ion-col *ngFor="let item of listaSucursales | async" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <button (click)="openSucursal(item.data.sucursal, item.nombre)" ion-item>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono_sucursal.png">
+          </ion-avatar>
+          <h2>{{item.nombre}}</h2>                    
+          <p style="color:#999999;">Direccion: {{item.direccion}}</p>
+          <p style="color:#999999;">Tel.: {{item.telefono}} / cel.{{item.celular}}</p>
+        </button>
+      </ion-col>
+    </ion-row>  
+  </ion-grid>
+  
+</ion-content>

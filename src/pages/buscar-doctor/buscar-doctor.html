@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Buscar Doctor</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12>
+        <ion-item>
+            <ion-searchbar (ionInput)="onInput($event)" style="width:100%; max-width:100%"></ion-searchbar>
+        </ion-item>
+
+          <ion-list>
+              <button ion-item *ngFor="let doctor of listaDoctores | orderBy: 'nombres'" (click)="seleccionarDoctor(doctor.objectID, doctor.nombres, doctor.apellidos, doctor.puntaje)">
+                <p>{{doctor.nombres}} {{doctor.apellidos}}</p>
+                <ion-note item-end>
+                  Puntos: {{doctor.puntaje}}
+                </ion-note>
+              </button>
+          </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <div class="ion-wizard-footer">
+    <ion-fab right bottom>
+      <button ion-fab (click)="abrirRegistrarDoctor ()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
+  </div>
+</ion-footer>

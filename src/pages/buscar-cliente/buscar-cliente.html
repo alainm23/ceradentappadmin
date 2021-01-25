@@ -1,0 +1,89 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Buscar Cliente</ion-title>
+      <ion-buttons end>
+        <button ion-button (click)="dismiss()">
+          <span ion-text color="primary">Cerrar</span>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+
+    <ion-toolbar>
+      <ion-segment [(ngModel)]="segment">
+        <ion-segment-button value="dni">
+          Busqueda por DNI
+        </ion-segment-button>
+        <ion-segment-button value="letras">
+          Busqueda por Nombres
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
+  </ion-header>
+
+
+<ion-content>
+  <ng-container *ngIf="segment === 'dni'">
+    <ion-searchbar [(ngModel)]="dni" placeholder="Buscar por DNI" style="width:100%; max-width:100%"></ion-searchbar>
+
+    <div style="margin: 1rem;">
+      <button ion-button (click)="buscar_dni ()" block>Buscar</button>
+    </div>
+
+    <ion-list>
+      <button ion-item *ngFor="let cliente of listaClientes | orderBy: 'nombres'" (click)="seleccionarCliente (cliente.usuario, cliente.nombres, cliente.apellidos, cliente.tipo, cliente.telefono, cliente.dni)">
+        <ion-avatar item-start *ngIf="cliente.tipo=='adulto'">
+          <img src="assets/imgs/icono_user_default.png">
+        </ion-avatar>
+        <ion-avatar item-start *ngIf="cliente.tipo=='menor'">
+          <img src="assets/imgs/child-icon.png">
+        </ion-avatar>
+        <p>{{cliente.nombres}} {{cliente.apellidos}}</p>
+        <ion-note item-end *ngIf="cliente.tipo=='adulto'">
+          Cel.: {{ cliente.telefono}}
+        </ion-note>
+        <ion-note item-end *ngIf="cliente.tipo=='menor'">
+          DNI: {{ cliente.dni}}
+        </ion-note>
+      </button>
+    </ion-list>
+  </ng-container>
+
+  <ng-container *ngIf="segment === 'letras'">
+    <div style="text-align:center; background-color:#f4f4f4; padding:20px;">
+      <span (click)="buscarClientesLetra(letra)" style="color:#000000; font-size:2rem;" *ngFor="let letra of letras">{{letra}}&nbsp;&nbsp;</span>
+    </div>
+
+    <ion-list *ngIf="carga">
+        <ion-item>
+            <ion-searchbar (ionInput)="onInput($event)" style="width:100%; max-width:100%"></ion-searchbar>
+        </ion-item>
+
+        <button ion-item *ngFor="let cliente of listaClientes | orderBy: 'nombres'" (click)="seleccionarCliente(cliente.data.usuario, cliente.nombres, cliente.apellidos, cliente.tipo, cliente.telefono, cliente.dni)">
+          <ion-avatar item-start *ngIf="cliente.tipo=='adulto'">
+            <img src="assets/imgs/icono_user_default.png">
+          </ion-avatar>
+          <ion-avatar item-start *ngIf="cliente.tipo=='menor'">
+            <img src="assets/imgs/child-icon.png">
+          </ion-avatar>
+          <p>{{cliente.nombres}} {{cliente.apellidos}}</p>
+          <ion-note item-end *ngIf="cliente.tipo=='adulto'">
+            Cel.: {{ cliente.telefono}}
+          </ion-note>
+          <ion-note item-end *ngIf="cliente.tipo=='menor'">
+            DNI: {{ cliente.dni}}
+          </ion-note>
+        </button>
+      </ion-list>
+  </ng-container>
+</ion-content>
+
+<ion-footer>
+  <div class="ion-wizard-footer">
+    <ion-fab right bottom>
+      <button ion-fab (click)="abrirRegistrarCliente ()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-fab>
+  </div>
+</ion-footer>
+

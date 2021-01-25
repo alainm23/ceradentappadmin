@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Insumos Sucursal: {{sucursal?.nombre}}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+  
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12> 
+        <ion-list>
+          <ion-item *ngFor="let item of stockSucursal">
+            <ion-label>
+              {{item?.dataInsumo.nombre}}
+            </ion-label>
+            <div item-content>
+              <b>Stock:</b> {{item?.stock}} Unid.
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-col>  
+    </ion-row>
+  </ion-grid>
+</ion-content>
+

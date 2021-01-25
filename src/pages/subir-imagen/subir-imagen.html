@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Cargar Imagen</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col col-12>
+        <ion-card padding no-margin margin-bottom class="full-width">
+          <ion-item>
+            <input type="file" multiple (change)="detectFiles($event)">       
+            <div *ngIf="listaImagenes.length>0">
+              <img *ngFor="let imagen of listaImagenes" [src]="imagen.url" width="30%" style="width:30%; float:left;">
+            </div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>  
+    <ion-row>
+      <ion-col col-12>
+        <button type="button" ion-button icon-start block no-margin color="primary" [disabled]="listaImagenes.length==0" (click)="subirImagenes()" round tappable>Subir imagenes</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>  
+</ion-content>

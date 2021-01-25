@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Lista de Servicios Categorias
+    </ion-title>
+
+    <ion-buttons end>
+      <button (click)="registrar_categoria_alert ()" ion-button icon-only>
+        Registrar categoria&nbsp;<ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let item of items | orderBy: 'nombre'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono servicio.jpg">
+          </ion-avatar>
+          <h2>{{ item.nombre }}</h2>
+          <button item-end clear outline (click)="editarServicio (item)" ion-button icon-only>
+            <ion-icon color="primary" name="create"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

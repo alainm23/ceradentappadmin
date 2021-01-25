@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Descuentos / Puntos</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12> 
+        <ion-card>
+          <ion-card-header>
+            Monto total: S/. {{nuevoTotal}}
+          </ion-card-header>
+          <ion-card-content>
+              Puntos generados con la venta: {{puntajeNuevo}} pts.
+          </ion-card-content>
+        </ion-card>
+        
+        <form  [formGroup]="descuentoForm" (ngSubmit)="onSubmit()">
+        <ion-card padding no-margin margin-bottom class="full-width">          
+          <ion-item>
+            <ion-label stacked>Descuento S/. (*)</ion-label>
+            <ion-input type="number" formControlName="descuento" [(ngModel)]="descuento" (keyup)="validarDescuento($event)" placeholder="0"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="descuentoForm.get('descuento').errors && descuentoForm.get('descuento').dirty">
+            <p color="danger" ion-text *ngIf="descuentoForm.get('descuento').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="descuentoForm.get('descuento').hasError('max')">No puede haber un descuento mayor al valor de venta</p>            
+          </ion-item> 
+          <ion-item no-lines *ngIf="errorDescuento==1">
+            <p color="danger" ion-text>Este valor exede al valor de venta</p>            
+          </ion-item> 
+          <ion-item>
+            <ion-label stacked>Asunto descuento</ion-label>
+            <ion-input type="text" formControlName="motivo_descuento" placeholder="Porque es cliente frecuente"></ion-input>
+          </ion-item>  
+          <ion-item>
+            <ion-label stacked>Canjear puntos: (Max {{puntajeDoctor}})</ion-label>
+            <ion-input type="number" formControlName="puntos_usados" [(ngModel)]="puntosCanjeados" (keyup)="validarCanje($event)" placeholder="0"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="descuentoForm.get('puntos_usados').errors && descuentoForm.get('puntos_usados').dirty">
+            <p color="danger" ion-text *ngIf="descuentoForm.get('puntos_usados').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="descuentoForm.get('puntos_usados').hasError('max')">Este valor exede al puntaje actual del doctor</p>            
+          </ion-item>   
+          <ion-item no-lines *ngIf="errorCanje==1">
+            <p color="danger" ion-text>Este valor exede al valor de venta</p>            
+          </ion-item>               
+        </ion-card>
+
+        <button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!descuentoForm.valid || errorCanje==1 || errorDescuento==1" round tappable>
+          Siguiente
+        </button>
+        </form>
+        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+  

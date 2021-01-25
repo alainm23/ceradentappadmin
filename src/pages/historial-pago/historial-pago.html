@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Historial pagos</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let pago of historialPagos" col-12>
+        <ion-card padding no-margin margin-bottom class="full-width">
+          <ion-item>
+            <h2>{{fecha(pago.fecha)}}</h2>                    
+            <p><b>Efectivo:</b> {{pago.efectivo| currency:'S/. '}}</p>        
+            <p><b>Tarjeta:</b> {{pago.tarjeta| currency:'S/. '}}</p>        
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>  
+  </ion-grid>  
+</ion-content>
+  

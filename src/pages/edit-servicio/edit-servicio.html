@@ -1,0 +1,122 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{titulo}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="fondo">
+  <ion-grid style="margin-top:4rem;">
+    <ion-row>
+      <ion-col col-6>
+      <!--<ion-col *ngIf="!codigoServicio" col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 offset-lg-4 offset-xl-4 offset-md-3></ion-col>-->
+        <form [formGroup]="servicioForm" fireForm path="{{path}}" (stateChange)="changeHandler($event)">
+        <ion-card padding no-margin margin-bottom class="full-width">
+          <ion-item>
+            <ion-label stacked>Nombre (*)</ion-label>
+            <ion-input type="text" formControlName="nombre" placeholder="Placa Panoramica | Paquete Panoramico"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="servicioForm.get('nombre').errors && servicioForm.get('nombre').dirty">
+            <p color="danger" ion-text *ngIf="servicioForm.get('nombre').hasError('required')">Este campo es obligatorio</p>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Precio en Soles (*)</ion-label>
+            <ion-input type="number" formControlName="precio" placeholder="50"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="servicioForm.get('precio').errors && servicioForm.get('precio').dirty">
+            <p color="danger" ion-text *ngIf="servicioForm.get('precio').hasError('required')">Este campo es obligatorio</p>
+            <p color="danger" ion-text *ngIf="servicioForm.get('precio').hasError('pattern')">Solo incluir numeros</p>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Precio de duplicado (*)</ion-label>
+            <ion-input type="number" formControlName="precio_duplicado" placeholder="50"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="servicioForm.get('precio_duplicado').errors && servicioForm.get('precio_duplicado').dirty">
+            <p color="danger" ion-text *ngIf="servicioForm.get('precio_duplicado').hasError('required')">Este campo es obligatorio</p>
+            <p color="danger" ion-text *ngIf="servicioForm.get('precio_duplicado').hasError('pattern')">Solo incluir numeros</p>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Puntos (*)</ion-label>
+            <ion-input type="text" formControlName="puntos" placeholder="10"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="servicioForm.get('puntos').errors && servicioForm.get('puntos').dirty">
+            <p color="danger" ion-text *ngIf="servicioForm.get('puntos').hasError('required')">Este campo es obligatorio</p>
+            <p color="danger" ion-text *ngIf="servicioForm.get('puntos').hasError('pattern')">Solo incluir numeros</p>
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Tipo (*)</ion-label>
+            <ion-select formControlName="tipo">
+                <ion-option value="">Seleccionar tipo</ion-option>
+                <ion-option value="Servicio">Servicio</ion-option>
+                <ion-option value="Paquete">Paquete</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item no-lines *ngIf="servicioForm.get('tipo').errors && servicioForm.get('tipo').dirty">
+            <p color="danger" ion-text *ngIf="servicioForm.get('tipo').hasError('required')">Este campo es obligatorio</p>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Categoria</ion-label>
+            <ion-select formControlName="categoria_id">
+                <ion-option *ngFor="let item of categorias" [value]="item.id">
+                  {{ item.nombre }}
+                </ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Mostrar este servicio al doctor</ion-label>
+            <ion-toggle formControlName="mostrar_comanda"></ion-toggle>
+          </ion-item>
+
+          <ion-item>
+            <ion-label stacked>Descripcion</ion-label>
+            <ion-input type="text" formControlName="descripcion" placeholder="Descripcion sobre el servicio o paquete"></ion-input>
+          </ion-item>
+        </ion-card>
+
+        <!--<button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!servicioForm.valid" round tappable>
+          Guardar
+        </button>-->
+        </form>
+        <div *ngIf="state === 'synced'" style="width:100%; background-color:green; color:white; text-align:center; padding:3rem 0rem;">
+            La informacion esta sincronizada con la base de datos
+        </div>
+
+        <div *ngIf="state === 'modified'" style="width:100%; background-color:orange; color:white; text-align:center; padding:3rem 0rem;">
+            Guardando cambios en la base de datos...
+        </div>
+        <!-- Getting an ERROR Error: ExpressionChangedAfterItHasBeenCheckedError -->
+        <!-- <div *ngIf="state === 'loading'" class="notification is-info">
+            Form data is preloading
+        </div> -->
+        <div *ngIf="state === 'error'" style="width:100%; background-color:red; color:white; text-align:center; padding:3rem 0rem;">
+            Error al guardar la informacion con la base de datos
+        </div>
+      </ion-col>
+      <ion-col *ngIf="codigoServicio" col-6>
+        <h3>Insumos</h3>
+        <ion-list *ngIf="listaInsumos" class="accordion-list">
+
+            <ion-list-header *ngFor="let item of listaInsumos; let i = index;"  no-lines no-padding>
+              <ion-row style="padding:0; margin:0;">
+                <ion-col col-11 style="padding:0; margin:0;">
+                  <button type="button" ion-item (click)="toggleInsumo(i,item.id)" detail-none [ngClass]="{'section-active': insumosSeleccionados.get(item.id), 'section': !insumosSeleccionados.get(item.id)}">
+                  <ion-badge *ngIf="insumosSeleccionados.get(item.id)" item-left color="primary">{{insumosSeleccionados.get(item.id).cantidad}}</ion-badge>
+                  <ion-icon item-left name="arrow-dropright" *ngIf="!insumosSeleccionados.get(item.id)"></ion-icon>
+                  <ion-icon item-left name="checkmark" *ngIf="insumosSeleccionados.get(item.id)"></ion-icon>
+                    {{ item.nombre }}
+                  </button>
+                </ion-col>
+                <ion-col col-1 style="padding:0; margin:0;">
+                  <button type="button" ion-item  *ngIf="insumosSeleccionados.get(item.id)" (click)="quitarInsumo(i,item.id)" color="danger"><ion-icon name="close" color="light"></ion-icon></button>
+                </ion-col>
+              </ion-row>
+            </ion-list-header>
+
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title>Reservas</ion-title>
+  </ion-navbar>
+
+  <ion-toolbar>
+    <ion-searchbar [(ngModel)]="search_text" (ngModelChange)="filtrar ()" placeholder="Buscar un paciente">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let item of items" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item (click)="ver_detalle (item)">
+          <ion-badge *ngIf="item.visto === false" style="border-radius: 50%;" item-start color="success">
+            &nbsp;
+          </ion-badge>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono servicio.jpg">
+          </ion-avatar>
+          <h2>Paciente: {{ item.cliente_nombres }}</h2>
+          <h2>DNI: {{ item.cliente_dni }}</h2>
+          <h2>Doctor: {{ item.doctor.nombres }}</h2>
+          <button item-end outline ion-button>
+            Ver
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

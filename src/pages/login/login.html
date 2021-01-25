@@ -1,0 +1,35 @@
+<ion-content>
+  <div class="limiter">
+    <div class="container-login100">
+      <div class="wrap-login100">
+        <form  [formGroup]="phoneForm" (ngSubmit)="onSubmit()" class="login100-form">
+          <span class="login100-form-title" style="padding-bottom:1vw;">
+              <img src="assets/imgs/logo_ceradentok.png" width="70%">
+          </span>          
+          
+
+          <ion-list no-lines id="cuerpo"> 
+            <p style="font-family:Poppins-Regular; color:#333333;">Ingrese su numero de celular&nbsp;&nbsp;&nbsp;<a (click)="openExplicacion()" title="Porque debo ingresar mi numero de celular?"><ion-badge item-end><ion-icon name="help"></ion-icon></ion-badge></a></p>            
+            <ion-item>        
+                <ion-label> +51</ion-label>
+                <ion-input clearInput type="text" formControlName="phoneNumber" placeholder="984567213"></ion-input>
+            </ion-item>
+            <ion-item no-lines *ngIf="phoneForm.get('phoneNumber').errors && phoneForm.get('phoneNumber').dirty">
+              <p color="danger" ion-text *ngIf="phoneForm.get('phoneNumber').hasError('required')">Este campo es obligatorio</p>
+              <p color="danger" ion-text *ngIf="phoneForm.get('phoneNumber').hasError('pattern')">Solo incluir numeros (9 digitos)</p>
+            </ion-item>            
+            <br>
+            <button type="submit" color="primary" full ion-button round large style="text-transform:none;" [disabled]="!phoneForm.valid">Conectar</button>
+            <br>
+            <div style="padding-left:15%; text-align:center;"><div id="recaptcha-container"></div></div>
+            <br><br>
+            <p text-center style="color:#999999; font-size:1vw;">© PuntoPro SRL.</p>
+          </ion-list>          
+        </form>
+
+        <div class="login100-more" style="background-image: url('assets/imgs/bg-01.jpg');">
+        </div>
+      </div>
+    </div>
+  </div>  
+</ion-content>

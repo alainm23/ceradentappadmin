@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar color="primary">    
+    <ion-title>
+      Historial Doctor: {{(datosDoctor | async)?.nombres}} {{(datosDoctor | async)?.apellidos}}
+    </ion-title>    
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">    
+    <ion-card padding no-margin margin-bottom class="full-width">
+      <ion-row style="font-weight:bold; border-bottom:1px solid #666;">
+        <ion-col>Fecha</ion-col>
+        <ion-col>Cliente</ion-col>
+        <ion-col>Sucursal</ion-col>
+        <ion-col>Monto (S/.)</ion-col>
+        <ion-col>Descuento (S/.) - Puntos</ion-col>
+        <ion-col>Servicios</ion-col>
+      </ion-row>
+      <ion-row *ngFor="let venta of historialDoctor | async | orderBy: 'fecha' : true">
+        <ion-col>{{venta.fecha}}<br>Admin: {{venta.administrador}}<br>{{venta.tipo_recibo}} - {{venta.nro_recibo}}</ion-col>
+        <ion-col>{{venta.nombre_cliente}}</ion-col>
+        <ion-col>{{venta.nombre_sucursal}}</ion-col>
+        <ion-col><a *ngIf="venta.monto_efectivo+venta.monto_tarjeta==venta.monto" tooltip="{{venta.tipo_recibo}} - {{venta.nro_recibo}}" positionH="right" arrow>Total: S/. {{venta.monto | currency:'S/. '}}</a>
+          <a  *ngIf="venta.monto_efectivo+venta.monto_tarjeta<venta.monto" style="color:red;" (click)="openActualizarPago(venta.data.placa, venta.monto-(venta.monto_efectivo+venta.monto_tarjeta), venta.tipo_recibo, venta.nro_recibo, venta.sucursal, venta.fecha, venta.doctor, venta.puntos_ganados)">Total: S/. {{venta.monto | currency:'S/. '}}</a>
+          <br><span tooltip="Efectivo: S/. {{venta.monto_efectivo}} - Tarjeta: S/. {{venta.monto_tarjeta}}" positionH="right" arrow>Cancelado: {{venta.monto_efectivo+venta.monto_tarjeta | currency:'S/. '}}</span>&nbsp;<ion-icon (click)="openHistorialPagos(venta.data.placa)" name="list-box"></ion-icon>
+          <!--<span *ngIf="venta.monto_efectivo+venta.monto_tarjeta<venta.monto" tooltip="Efectivo: S/. {{venta.primer_pago_efectivo}} - Tarjeta: S/. {{venta.primer_pago_tarjeta}}" positionH="right" arrow><br>Parcial: {{venta.primer_pago_efectivo+venta.primer_pago_tarjeta | currency:'S/. '}}</span>          -->
+        </ion-col>
+        <ion-col><span tooltip="{{venta.motivo_descuento}}" positionV="bottom" arrow>Descuento: S/. {{venta.descuento}}</span><br>Puntos usados: {{venta.puntos_usados}} <br>Puntos ganados: {{venta.puntos_ganados}} </ion-col>
+        <ion-col>{{venta.nombres_servicios}}<br><ion-icon *ngIf="venta.imagenes" name="albums" (click)="mostrarServicios(venta.data.placa)"></ion-icon><ion-icon *ngIf="!venta.imagenes" color="danger" name="albums" (click)="mostrarServicios(venta.data.placa)"></ion-icon><span *ngIf="venta.duplicado">&nbsp;(duplicado)</span></ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-grid>  
+</ion-content>

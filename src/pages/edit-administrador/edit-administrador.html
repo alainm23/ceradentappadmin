@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{titulo}}</ion-title>
+  </ion-navbar>
+</ion-header>
+  
+  
+<ion-content class="fondo">
+  <ion-grid style="margin-top:4rem;">
+    <ion-row>
+      <ion-col col-12 col-sm-9 col-md-6 col-lg-4 col-xl-4 offset-lg-4 offset-xl-4 offset-md-3>
+          
+        <form  [formGroup]="administradorForm" (ngSubmit)="onSubmit()">
+        <ion-card padding no-margin margin-bottom class="full-width">          
+          <ion-item>
+            <ion-label stacked>Nombres (*)</ion-label>
+            <ion-input type="text" formControlName="nombres" placeholder="Javier" value="{{(datosAdministrador | async)?.nombres}}"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="administradorForm.get('nombres').errors && administradorForm.get('nombres').dirty">
+            <p color="danger" ion-text *ngIf="administradorForm.get('nombres').hasError('required')">Este campo es obligatorio</p>            
+          </ion-item> 
+          <ion-item>
+            <ion-label stacked>Apellidos (*)</ion-label>
+            <ion-input type="text" formControlName="apellidos" placeholder="Median Loaiza" value="{{(datosAdministrador | async)?.apellidos}}"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="administradorForm.get('apellidos').errors && administradorForm.get('apellidos').dirty">
+            <p color="danger" ion-text *ngIf="administradorForm.get('apellidos').hasError('required')">Este campo es obligatorio</p>            
+          </ion-item>
+          <ion-item>
+            <ion-label stacked>Email (*)</ion-label>
+            <ion-input type="text" formControlName="email" placeholder="jmedina@hotmail.com6" value="{{(datosAdministrador | async)?.email}}"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="administradorForm.get('email').errors && administradorForm.get('email').dirty">
+            <p color="danger" ion-text *ngIf="administradorForm.get('email').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="administradorForm.get('email').hasError('email')">Email invalido</p>            
+          </ion-item>          
+          <ion-item>
+            <ion-label stacked>DNI (*)</ion-label>
+            <ion-input type="text" formControlName="dni" placeholder="41755993" value="{{(datosAdministrador | async)?.dni}}"></ion-input>
+          </ion-item>
+          <ion-item no-lines *ngIf="administradorForm.get('dni').errors && administradorForm.get('dni').dirty">
+            <p color="danger" ion-text *ngIf="administradorForm.get('dni').hasError('required')">Este campo es obligatorio</p>            
+            <p color="danger" ion-text *ngIf="administradorForm.get('dni').hasError('pattern')">Solo incluir numeros (8 digitos)</p>            
+          </ion-item>  
+          
+          <ion-row no-padding *ngIf="titulo=='Registrar Administrador'">              
+            <ion-col col-4 no-padding>
+              <ion-item>
+                <ion-label stacked>Codigo Pais:</ion-label>
+                <ion-select formControlName="codigotelefono" [(ngModel)]="default" >
+                  <ion-option *ngFor="let pais of countries" [value]=[pais.dial_code]>{{pais.name}} ({{pais.dial_code}})</ion-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col col-8 no-padding>
+              <ion-item>
+                <ion-label stacked>Celular:</ion-label>
+                <ion-input  type="text" formControlName="telefono" placeholder="#celular"></ion-input>
+              </ion-item>
+              <ion-item no-lines *ngIf="administradorForm.get('telefono').errors && administradorForm.get('telefono').dirty">            
+                <p color="danger" ion-text *ngIf="administradorForm.get('telefono').hasError('minlength')">Debe contener 9 digitos como minimo</p>            
+              </ion-item> 
+            </ion-col>
+          </ion-row>
+          <div *ngIf="titulo=='Editar Administrador'">            
+            <ion-input type="hidden" formControlName="telefono" placeholder="984675432" value="{{(datosAdministrador | async)?.telefono}}"></ion-input>              
+          </div>
+        </ion-card>
+
+        <button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!administradorForm.valid" round tappable>
+          Guardar
+        </button>
+        </form>
+        
+      
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+  

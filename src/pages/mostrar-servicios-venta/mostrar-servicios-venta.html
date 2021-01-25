@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>Servicios</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="dismiss()">
+        <span ion-text>Cerrar</span>  
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let servicio of listaServicios" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-card padding no-margin margin-bottom class="full-width">
+          <ion-item>
+            <h2 text-wrap>({{servicio.data.cantidad}}) {{servicio.nombre}}</h2>     
+            
+            <ion-icon (click)="abrirSubirImagen(servicio.data.servicio)" name="add" item-start></ion-icon>               
+            <ion-icon (click)="prepararDuplicado(servicio.precio_duplicado, servicio.data.servicio, servicio.data.imagenes)" name="copy" item-end></ion-icon>
+            <div style="margin-top:2rem;" *ngFor="let imagen of imagenesServicios.get(servicio.data.servicio)">
+              <img (click)="abrirSubirImagen(servicio.data.servicio)" imageViewer src="{{imagen | async}}">
+            </div>
+            
+          </ion-item>
+          <ion-item>
+            <div style="clear:both;"><a href="#"><p (click)="cambiarInsumos(servicio.data.servicio)">¿Se utilizaron más insumos?</p></a></div>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>  
+  </ion-grid>  
+</ion-content>

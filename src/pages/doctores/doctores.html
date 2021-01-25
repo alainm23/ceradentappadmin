@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-navbar color="primary">
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>
+        Lista de Doctores
+      </ion-title>
+      <ion-buttons end>
+        <button (click)="registrarDoctor()" ion-button icon-only>
+          Registrar Doctor&nbsp;<ion-icon name="add-circle"></ion-icon>
+        </button>
+        <button (click)="exportarDoctores()" ion-button icon-only>
+          Exportar Doctor&nbsp;<ion-icon name="add-circle"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+
+  <ion-content padding class="fondo">
+    <ion-grid style="margin-top:1rem;">
+      <ion-row>
+        <ion-searchbar (ionInput)="onInput($event)" style="width:100%; max-width:100%" placeholder="Buscar doctor por apellido Ejemplo: Jimenez"></ion-searchbar>
+        <ion-col *ngFor="let item of listaDoctores | orderBy: 'nombres'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+          <ion-item>
+            <ion-avatar item-start>
+              <img src="assets/imgs/icono_doctor.png">
+            </ion-avatar>
+            <h2>{{item.nombres}} {{item.apellidos}}</h2>
+            <p style="color:#999999;">cel. {{item.telefono}} - email: {{item.email}}</p>
+            <p style="color:#999999;">Puntaje: {{item.puntaje}}</p>
+            <p style="color:#999999;" *ngIf="item.dataNumero!=undefined">Clientes derivados: {{item.dataNumero.nro_placas}}</p>
+            <p style="color:#999999;" *ngIf="item.dataNumero==undefined">Clientes derivados: 0</p>
+            <button item-end (click)="openOpcionesDoctor(item.id, item.telefono)" color="primary" ion-button icon-only clear=true>
+              <ion-icon name="more"></ion-icon>
+            </button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-content>

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Lista de Servicios
+    </ion-title>
+
+    <ion-buttons end>
+      <button (click)="ver_categorias ()" ion-button icon-only>
+        Categorias&nbsp;<ion-icon name="eye"></ion-icon>
+      </button>
+    </ion-buttons>
+
+
+    <ion-buttons end>
+      <button (click)="registrarServicio()" ion-button icon-only>
+        Registrar servicio&nbsp;<ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let item of listaServicios | async | orderBy: 'nombre'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono servicio.jpg">
+          </ion-avatar>
+          <h2>{{item.tipo}}: {{item.nombre}}</h2>
+          <p style="color:#999999;">Precio: S/. {{item.precio}} - Puntos: {{item.puntos}}</p>
+          <button item-end clear outline (click)="editarServicio (item.id)" ion-button icon-only>
+            <ion-icon color="primary" name="create"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

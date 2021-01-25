@@ -1,0 +1,152 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Ventas CERADENT - {{montoVendidoEfectivo+montoVendidoTarjeta+montoSaldosEfectivo+montoSaldosTarjeta | currency:'S/. '}}
+    </ion-title>
+    <ion-buttons end>
+      <button *ngIf="isGerente==true" (click)="exportar()" ion-button icon-end>
+        <ion-icon name="download"></ion-icon>
+      </button>
+      <button (click)="openReservas ()" id="notification-button" ion-button icon-end>
+        Ver ordenes
+        <ion-icon name="eye">
+          <ion-badge id="notifications-badge" color="danger">
+            {{ ordenes.length }}
+          </ion-badge>
+        </ion-icon>
+      </button>
+      <button (click)="openInsumos()" ion-button icon-end>
+        Ver insumos
+        <ion-icon name="eye"></ion-icon>
+      </button>
+      <button (click)="registrarVenta()" ion-button icon-end>
+        Registrar nueva venta
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar color="primary">
+    <ion-row>
+      <ion-col text-center style="color:#FFF;">
+          Efectivo: {{montoVendidoEfectivo + montoSaldosEfectivo | currency:'S/. '}}
+      </ion-col>
+
+      <ion-col text-center style="color:#FFF;">
+          Tarjeta: {{montoVendidoTarjeta + montoSaldosTarjeta | currency:'S/. '}}
+      </ion-col>
+  </ion-row>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3>
+        <ion-item>
+          <ion-select interface="popover" style="width:100%; max-width:100%;" [(ngModel)]="tipoActual" (ionChange)="onSelectTipo($event)">
+            <ion-option value="diario">Reporte diario</ion-option>
+            <ion-option value="mensual">Reporte mensual</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col *ngIf="mostrarDatepicker" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+
+          <ion-datetime displayFormat="MMMM DD, del YYYY" [(ngModel)]="fechaActual" (ionChange)="onSelectDate($event)"
+          monthNames="Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre"
+          monthShortNames="Ene, Feb, Mar, Abr, May, Jun, Jul, Agos, Sep, Oct, Nov, Dic"
+          dayNames="domingo, lunes, martes, miercoles, jueves, viernes, sabado"
+          dayShortNames="dom, lun, mar, mie, jue, vie, sab"
+          cancelText="Cancelar" doneText="Listo"></ion-datetime>
+        </ion-item>
+      </ion-col>
+      <ion-col *ngIf="!mostrarDatepicker" col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3>
+        <ion-item>
+          <ion-select interface="popover" style="width:100%; max-width:100%;" [(ngModel)]="mesActual" (ionChange)="onSelectMes($event)">
+              <ion-option value="01">Enero</ion-option>
+              <ion-option value="02">Febrero</ion-option>
+              <ion-option value="03">Marzo</ion-option>
+              <ion-option value="04">Abril</ion-option>
+              <ion-option value="05">Mayo</ion-option>
+              <ion-option value="06">Junio</ion-option>
+              <ion-option value="07">Julio</ion-option>
+              <ion-option value="08">Agosto</ion-option>
+              <ion-option value="09">Septiembre</ion-option>
+              <ion-option value="10">Octubre</ion-option>
+              <ion-option value="11">Noviembre</ion-option>
+              <ion-option value="12">Diciembre</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col *ngIf="!mostrarDatepicker" col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3>
+        <ion-item>
+          <ion-select interface="popover" style="width:100%; max-width:100%;" [(ngModel)]="anioActual" (ionChange)="onSelectAnio($event)">
+              <ion-option value="2018">2018</ion-option>
+              <ion-option value="2019">2019</ion-option>
+              <ion-option value="2020">2020</ion-option>
+              <ion-option value="2021">2021</ion-option>
+              <ion-option value="2022">2022</ion-option>
+              <ion-option value="2023">2023</ion-option>
+              <ion-option value="2024">2024</ion-option>
+              <ion-option value="2025">2015</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3>
+        <ion-item>
+          <ion-select interface="popover" style="width:100%; max-width:100%;" [(ngModel)]="sucursal" (ionChange)="onSelectSucursal($event)">
+              <ion-option *ngFor="let item of listaSucursales | async" [value]="item.data.sucursal">{{item.nombre}}</ion-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-card padding no-margin margin-bottom class="full-width" style="margin-top:3rem;">
+      <ion-row style="font-weight:bold; border-bottom:1px solid #666;">
+        <ion-col>Fecha</ion-col>
+        <ion-col>Cliente</ion-col>
+        <ion-col>Doctor</ion-col>
+        <ion-col>Monto (S/.)</ion-col>
+        <ion-col>Recibo</ion-col>
+        <ion-col>Descuento (S/.) - Puntos canjeados</ion-col>
+        <ion-col>Servicios</ion-col>
+      </ion-row>
+      <ion-row style="border-bottom:1px solid #CCC;" *ngFor="let venta of ventasMensuales | orderBy: 'fecha' : true">
+        <ion-col><ion-icon (click)="eliminarVenta(venta.data.placa)" color="danger" name="trash"></ion-icon>&nbsp;{{venta.fecha}}<br>Admin: {{venta.administrador}}</ion-col>
+        <ion-col>{{venta.nombre_cliente}}</ion-col>
+        <ion-col>{{venta.nombre_doctor}}</ion-col>
+        <ion-col><a *ngIf="venta.monto_efectivo+venta.monto_tarjeta==venta.monto" tooltip="{{venta.tipo_recibo}} - {{venta.nro_recibo}}" positionH="right" arrow>Total: {{venta.monto | currency:'S/. '}}</a>
+          <a  *ngIf="venta.monto_efectivo+venta.monto_tarjeta<venta.monto" style="color:red;" (click)="openActualizarPago(venta.data.placa, venta.monto-(venta.monto_efectivo+venta.monto_tarjeta), venta.tipo_recibo, venta.nro_recibo, venta.sucursal, venta.fecha, venta.doctor, venta.puntos_ganados)">Total: {{venta.monto | currency:'S/. '}}</a>
+          <br><span tooltip="Efectivo: S/. {{venta.monto_efectivo}} - Tarjeta: S/. {{venta.monto_tarjeta}}" positionH="right" arrow>Cancelado: {{venta.monto_efectivo+venta.monto_tarjeta | currency:'S/. '}}</span>&nbsp;<ion-icon (click)="openHistorialPagos(venta.data.placa)" name="list-box"></ion-icon>
+          <!--<span *ngIf="venta.monto_efectivo+venta.monto_tarjeta<venta.monto" tooltip="Efectivo: S/. {{venta.primer_pago_efectivo}} - Tarjeta: S/. {{venta.primer_pago_tarjeta}}" positionH="right" arrow><br>Parcial: {{venta.primer_pago_efectivo+venta.primer_pago_tarjeta | currency:'S/. '}}</span>-->
+        </ion-col>
+        <ion-col>{{venta.tipo_recibo}} - {{venta.nro_recibo}}</ion-col>
+        <ion-col><span tooltip="{{venta.motivo_descuento}}" positionH="right" arrow>Descuento: {{venta.descuento | currency:'S/. '}}</span><br>Puntos usados: {{venta.puntos_usados}} <br>Puntos ganados: {{venta.puntos_ganados}} </ion-col>
+        <ion-col>{{venta.nombres_servicios}}<br><ion-icon *ngIf="venta.imagenes" name="albums" (click)="mostrarServicios(venta.data.placa)"></ion-icon><ion-icon *ngIf="!venta.imagenes" color="danger" name="albums" (click)="mostrarServicios(venta.data.placa)"></ion-icon><span *ngIf="venta.duplicado">&nbsp;(duplicado)</span></ion-col>
+      </ion-row>
+
+
+      <ion-row style="border-bottom:1px solid #CCC;" *ngFor="let venta of saldosMensuales | orderBy: 'fecha' : true">
+        <ion-col><ion-icon (click)="eliminarVenta(venta.placa)" color="danger" name="trash"></ion-icon>&nbsp;{{venta.fecha}}<br>Admin: {{venta.dataPlaca.administrador}}</ion-col>
+        <ion-col>{{venta.dataPlaca.nombre_cliente}}</ion-col>
+        <ion-col>{{venta.dataPlaca.nombre_doctor}}</ion-col>
+        <ion-col><a *ngIf="venta.dataPlaca.monto_efectivo+venta.dataPlaca.monto_tarjeta==venta.dataPlaca.monto" tooltip="{{venta.dataPlaca.tipo_recibo}} - {{venta.dataPlaca.nro_recibo}}" positionH="right" arrow>Total: {{venta.dataPlaca.monto | currency:'S/. '}}</a>
+          <a *ngIf="venta.dataPlaca.monto_efectivo+venta.dataPlaca.monto_tarjeta<venta.dataPlaca.monto" style="color:red;" (click)="openActualizarPago(venta.placa, venta.dataPlaca.monto-(venta.dataPlaca.monto_efectivo+venta.dataPlaca.monto_tarjeta), venta.dataPlaca.tipo_recibo, venta.dataPlaca.nro_recibo, venta.dataPlaca.sucursal, venta.dataPlaca.fecha, venta.dataPlaca.doctor, venta.dataPlaca.puntos_ganados)">Total: {{venta.dataPlaca.monto | currency:'S/. '}}</a>
+          <br><span tooltip="Efectivo: S/. {{venta.dataPlaca.monto_efectivo}} - Tarjeta: S/. {{venta.dataPlaca.monto_tarjeta}}" positionH="right" arrow hover>Cancelado: {{venta.dataPlaca.monto_efectivo+venta.dataPlaca.monto_tarjeta | currency:'S/. '}}</span>&nbsp;<ion-icon (click)="openHistorialPagos(venta.placa)" name="list-box"></ion-icon>
+          <span  tooltip="Efectivo: S/. {{venta.efectivo}} - Tarjeta: S/. {{venta.tarjeta}}" positionH="right" arrow><br>Parcial: {{venta.efectivo+venta.tarjeta | currency:'S/. '}}</span>
+        </ion-col>
+        <ion-col>{{venta.tipo_recibo}} - {{venta.nro_recibo}}</ion-col>
+        <ion-col><span tooltip="{{venta.dataPlaca.motivo_descuento}}" positionH="right" arrow>Descuento: {{venta.dataPlaca.descuento | currency:'S/. '}}</span><br>Puntos usados: {{venta.dataPlaca.puntos_usados}} <br>Puntos ganados: {{venta.dataPlaca.puntos_ganados}} </ion-col>
+        <ion-col>{{venta.dataPlaca.nombres_servicios}}<br><ion-icon *ngIf="venta.dataPlaca.imagenes" name="albums" (click)="mostrarServicios(venta.placa)"></ion-icon><ion-icon *ngIf="!venta.dataPlaca.imagenes" color="danger" name="albums" (click)="mostrarServicios(venta.placa)"></ion-icon><span *ngIf="venta.dataPlaca.duplicado">&nbsp;(duplicado)</span></ion-col>
+      </ion-row>
+    </ion-card>
+
+
+  </ion-grid>
+
+</ion-content>
+

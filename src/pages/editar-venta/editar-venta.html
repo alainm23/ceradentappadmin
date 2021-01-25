@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>{{titulo}} - {{nombreSucursal}}</ion-title>
+  </ion-navbar>
+</ion-header>
+  <ion-content class="fondo">
+    <ion-grid style="margin-top:4rem;">
+      <form  [formGroup]="placaForm" (ngSubmit)="onSubmit()">
+        <ion-row>
+          <ion-col col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-card padding no-margin margin-bottom class="full-width">
+              <ion-item>
+                <span>Cliente: </span><button type="button" ion-button color="primary" outline  small item-end (click)="openSeleccionarTipoCliente()">Cliente</button><span style="color:#CCCCCC;">{{nombreCliente}}</span>
+
+                <ion-icon *ngIf="codigoCliente!='' && tipoCliente=='adulto'" (click)="openOpcionesCliente()" item-end [color]="color" name="more"></ion-icon>
+                <ion-icon *ngIf="codigoCliente!='' && tipoCliente=='menor'" (click)="openOpcionesClienteMenor()" item-end [color]="color" name="more"></ion-icon>
+
+              </ion-item>
+              <ion-item>
+                <!--<ion-input type="text" formControlName="nombre_cliente" placeholder="Sucursal de Huayruropata"></ion-input>-->
+                <span>Doctor: </span><button type="button" ion-button color="primary" outline  small item-end (click)="openBuscarDoctor()" >Doctor</button><span style="color:#CCCCCC;">{{nombreDoctor}}</span>
+                <ion-note item-end *ngIf="puntajeDoctor!=''">
+                  Pts: {{puntajeDoctor}}
+                </ion-note>
+              </ion-item>
+              <ion-item>
+                <ion-input type="hidden" formControlName="nombre_cliente" [(ngModel)]="nombreCliente"></ion-input>
+                <ion-input type="hidden" formControlName="nombre_doctor" [(ngModel)]="nombreDoctor"></ion-input>
+                <ion-input type="hidden" formControlName="cliente" [(ngModel)]="codigoCliente"></ion-input>
+                <ion-input type="hidden" formControlName="doctor" [(ngModel)]="codigoDoctor"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label style="font-size:2rem;" stacked>Monto total: S/.</ion-label>
+                <ion-input type="number" readonly formControlName="monto_total" [(ngModel)]="monto_total" style="font-size:3rem;"></ion-input>
+              </ion-item>
+            </ion-card>
+            <button type="submit" ion-button icon-start block no-margin color="primary" [disabled]="!placaForm.valid" round tappable>
+              Continuar
+            </button>
+          </ion-col>
+          <ion-col col-12 col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+            <ion-list class="accordion-list">
+              <ion-list-header *ngFor="let item of listaServicios; let i = index" no-lines no-padding>
+                <ion-row style="padding:0; margin:0;">
+                <ion-col col-11 style="padding:0; margin:0;">
+                <button type="button" ion-item (click)="toggleSection(i,item.id,item.precio,item.puntos, item.nombre)" detail-none [ngClass]="{'section-active': item.open, 'section': !item.open}">
+                <ion-badge *ngIf="item.open" item-left color="primary">{{serviciosSeleccionados.get(item.id).cantidad}}</ion-badge>
+                <ion-icon item-left name="arrow-dropright" *ngIf="!item.open"></ion-icon>
+                <ion-icon item-left name="checkmark" *ngIf="item.open"></ion-icon>
+                  {{ item.nombre }} - S/. {{item.precio}}
+                </button>
+                </ion-col>
+                <ion-col col-1 style="padding:0; margin:0;">
+                <button type="button" ion-item  *ngIf="item.open" (click)="quitarServicio(i,item.id)" color="danger"><ion-icon name="close" color="light"></ion-icon></button>
+                </ion-col>
+                </ion-row>
+              </ion-list-header>
+            </ion-list>
+
+          </ion-col>
+        </ion-row>
+      </form>
+    </ion-grid>
+  </ion-content>

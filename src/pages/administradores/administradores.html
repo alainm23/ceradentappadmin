@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>     
+    <ion-title>
+      Lista de Administradores
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="registrarAdministrador()" ion-button icon-only>
+        Registrar Administrador&nbsp;<ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let item of listaAdministradores | async | orderBy: 'nombres'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono_user_default.png">
+          </ion-avatar>  
+          <h2>{{item.nombres}} {{item.apellidos}}</h2>                    
+          <p style="color:#999999;">cel. {{item.telefono}} - email: {{item.email}}</p>
+          <p style="color:#999999;">DNI: {{item.dni}}</p>
+          <ion-icon (click)="openOpcionesAdministrador(item.id, item.telefono)" item-end color="primary" name="more"></ion-icon>          
+        </ion-item>
+      </ion-col>
+    </ion-row>  
+  </ion-grid>
+  
+</ion-content>
+

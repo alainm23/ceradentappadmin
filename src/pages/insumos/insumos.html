@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>     
+    <ion-title>
+      Lista de Insumos
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="registrarInsumo()" ion-button icon-only>
+          Registrar insumo&nbsp;<ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-col *ngFor="let item of listaInsumos | async" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono_sucursal.png">
+          </ion-avatar>
+          <h2>{{item.nombre}}</h2>                    
+           
+          <ion-icon (click)="editarInsumo(item.id)" item-end color="primary" name="create"></ion-icon>
+          
+        </ion-item>
+      </ion-col>
+    </ion-row>  
+  </ion-grid>
+  
+</ion-content>
