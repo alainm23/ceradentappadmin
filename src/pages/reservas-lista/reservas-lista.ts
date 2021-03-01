@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { IonicPage, LoadingController, NavController, NavParams } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { HomePage } from '../home/home';
+import * as moment from 'moment';
 
 @IonicPage()
 @Component({
@@ -23,6 +24,7 @@ export class ReservasListaPage {
   }
 
   ionViewDidLoad () {
+    moment.locale ('es');
     console.log (this.navParams.data);
     if (this.navParams.get("sucursal") != undefined) {
       this.sucursal = this.navParams.get ('sucursal');
@@ -32,7 +34,7 @@ export class ReservasListaPage {
 
       loading.present ();
 
-      this.database.get_reservas ().subscribe ((res:any) => {
+      this.database.get_reservas ().subscribe ((res: any []) => {
         console.log (res);
         loading.dismiss ();
         this.items = res;
@@ -58,5 +60,13 @@ export class ReservasListaPage {
         return i.cliente_nombres.toLowerCase ().indexOf (this.search_text.toLowerCase ()) > -1;
       });
     }
+  }
+
+  get_fecha_format (fecha: string) {
+    if (fecha === null || fecha === undefined) {
+      return '';
+    }
+
+    return moment (fecha.substring (0, 10)).format ('ll');
   }
 }

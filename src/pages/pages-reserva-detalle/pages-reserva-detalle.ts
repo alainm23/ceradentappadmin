@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import * as moment from 'moment';
 import { HomePage } from '../home/home';
@@ -58,15 +58,16 @@ export class PagesReservaDetallePage {
   doctor: any;
   sucursal: any;
 
-  tomografia_volumetrica_derecho: Map <string, boolean> = new Map <string, boolean> ();
-  tomografia_volumetrica_izq: Map <string, boolean> = new Map <string, boolean> ();
+  tomografia_volumetrica_derecho: any [] = [];
+  tomografia_volumetrica_izq: any [] = [];
 
-  radio_intra_d_01: Map <string, boolean> = new Map <string, boolean> ();
-  radio_intra_d_02: Map <string, boolean> = new Map <string, boolean> ();
-  radio_intra_i_01: Map <string, boolean> = new Map <string, boolean> ();
-  radio_intra_i_02: Map <string, boolean> = new Map <string, boolean> ();
+  radio_intra_d_01: any [] = [];
+  radio_intra_d_02: any [] = [];
+  radio_intra_i_01: any [] = [];
+  radio_intra_i_02: any [] = [];
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private database: DatabaseProvider, private loadingCtrl: LoadingController) {
+    private database: DatabaseProvider, private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController) {
   }
 
   async ionViewDidLoad () {
@@ -75,6 +76,13 @@ export class PagesReservaDetallePage {
       this.reserva = this.navParams.get ("item");
       this.sucursal = this.navParams.get ("sucursal");
       console.log (this.reserva);
+
+      this.tomografia_volumetrica_derecho = this.reserva.servicio_extras.tomografia_volumetrica_derecho;
+      this.tomografia_volumetrica_izq = this.reserva.servicio_extras.tomografia_volumetrica_izq;
+      this.radio_intra_d_01 = this.reserva.servicio_extras.radio_intra_d_01;
+      this.radio_intra_d_02 = this.reserva.servicio_extras.radio_intra_d_02;
+      this.radio_intra_i_01 = this.reserva.servicio_extras.radio_intra_i_01;
+      this.radio_intra_i_02 = this.reserva.servicio_extras.radio_intra_i_02;
 
       if (this.reserva.doctor_id === null || this.reserva.doctor_id === undefined) {
         return;
@@ -122,5 +130,52 @@ export class PagesReservaDetallePage {
       operacion: "registrar",
       reserva: this.reserva
     });
+  }
+
+  eliminar () {
+    const prompt = this.alertCtrl.create({
+      title: 'Confirmar',
+      message: "¿Esta seguro que desea eliminar esta orden?",
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Confirmar',
+          handler: data => {
+            let loading = this.loadingCtrl.create({
+              content: "Procesando informacion..."
+            });
+
+            loading.present ();
+
+            this.database.delete_reserva (this.reserva.id).then (() => {
+              loading.dismiss ();
+              this.navCtrl.pop ();
+            }, error => {
+              console.log (error);
+              loading.dismiss ();
+            });
+          }
+        }
+      ]
+    });
+
+    prompt.present ();
+  }
+
+  validar_color (list: any [], value: string) {
+    if (list === undefined || list === null) {
+      return false;
+    }
+
+    if (list.find (x => x === value) === undefined) {
+      return false;
+    }
+
+    return true;
   }
 }

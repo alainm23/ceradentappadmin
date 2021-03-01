@@ -1,7 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicPage, NavController, LoadingController, ActionSheetController, AlertController, ToastController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  LoadingController,
+  ActionSheetController,
+  AlertController,
+  ToastController,
+  ModalController
+} from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
+const algoliasearch = require ('algoliasearch');
 
 @IonicPage()
 @Component({
@@ -9,49 +19,70 @@ import { Subscription } from 'rxjs';
   templateUrl: 'doctores.html',
 })
 export class DoctoresPage implements OnInit {
-listaDoctores: any;
-listaDoctores_bak: any;
-subscription:Subscription;
-
+  listaDoctores: any;
+  listaDoctores_bak: any;
+  subscription:Subscription;
+  client: any;
+  index: any;
+  doctores_map: Map <string, any> = new Map <string, any> ();
   constructor(
     public navCtrl: NavController,
     public database: DatabaseProvider,
     public loadingCtrl: LoadingController,
     public actionSheetCtrl: ActionSheetController,
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    public modalCtrl: ModalController
   ) {
   }
 
-  ngOnInit(){
-    let loading:any = this.loadingCtrl.create({
-      content: "Procesando informacion..."
-    })
-    loading.present().then(_=>{
-      this.subscription=this.database.getDoctores().subscribe(data=>{
-        this.listaDoctores=data;
-        this.listaDoctores_bak=data;
-        if (loading!=null && loading!=undefined) loading.dismiss();
-      });
-    })
+  ngOnInit () {
+    this.client = algoliasearch ("S9Z0BUVW9R", "34d4989ee34f43acce877f2d15c61611");
+    this.index = this.client.initIndex ("Doctores");
 
+    this.init_subscription_doctores ();
   }
 
-  onInput($event){
-    this.listaDoctores = this.listaDoctores_bak;
+  init_subscription_doctores () {
+    let loading:any = this.loadingCtrl.create({
+      content: "Procesando informacion..."
+    });
+
+    loading.present().then (_=> {
+      // this.subscription=this.database.get_doctores ().subscribe(data=>{
+      this.subscription = this.database.getDoctoresLimit (20).subscribe(data=>{
+        this.listaDoctores=data;
+        this.listaDoctores_bak=data;
+        loading.dismiss ();
+        console.log (data);
+      });
+    });
+  }
+
+  onInput($event) {
     let q = $event.target.value;
     if (q != "") {
-      this.listaDoctores = this.listaDoctores.filter ( item => {
-        return (item.apellidos.toLowerCase().indexOf (q.toLowerCase()) > -1)
+      this.index
+      .search(q)
+      .then(({ hits }) => {
+        console.log (hits);
+        this.limpiar_map ();
+        this.listaDoctores = hits.filter ((e: any) => {
+          e.id = e.objectID;
+          return true;
+        });
+      })
+      .catch(err => {
+        console.log (err);
       });
     }
   }
 
-  registrarDoctor(){
+  registrarDoctor() {
     this.navCtrl.push("EditDoctorPage",{"operacion":"registrar"});
   }
 
-  openOpcionesDoctor(doctor:string, telefono:string){
+  openOpcionesDoctor (doctor:string, telefono:string){
     console.log(doctor);
     let actionSheet = this.actionSheetCtrl.create({
       title: '¿Que desea realizar?',
@@ -60,6 +91,17 @@ subscription:Subscription;
           text: 'Editar Informacion',
           handler: () => {
             this.navCtrl.push("EditDoctorPage",{"doctor":doctor,"operacion":"editar"});
+          }
+        },
+        {
+          text: 'Enviar Mensaje',
+          handler: () => {
+            let profileModal = this.modalCtrl.create('MensajesPage',{
+              doctor: this.listaDoctores.find (x => x.id === doctor),
+              tipo: 'directo'
+            });
+
+            profileModal.present ();
           }
         },
         {
@@ -170,19 +212,39 @@ subscription:Subscription;
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy () {
     if (this.subscription!=undefined && this.subscription!=null)
-    this.subscription.unsubscribe();
+    this.subscription.unsubscribe ();
   }
 
-  exportarDoctores(){
+  exportarDoctores () {
+    this.ngOnDestroy ();
 
-    this.listaDoctores_bak.forEach(element => {
-      if (element.dataNumero!=undefined)
-      element.pacientes_enviados=element.dataNumero.nro_placas;
-      else element.pacientes_enviados=0;
+    let loading:any = this.loadingCtrl.create ({
+      content: "Procesando informacion..."
     });
-    this.database.exportAsExcelFile(this.listaDoctores_bak, "doctores");
+
+    loading.present ();
+
+    let unsubscribe = this.database.get_doctores ().subscribe ((res: any []) => {
+      unsubscribe.unsubscribe ();
+      console.log (res);
+      loading.dismiss ();
+      res.forEach (element => {
+        if (element.dataNumero!=undefined) {
+          element.pacientes_enviados = element.dataNumero.nro_placas;
+        } else {
+          element.pacientes_enviados = 0;
+        }
+      });
+
+      this.database.exportAsExcelFile (res, "doctores");
+      this.init_subscription_doctores ();
+    }, error => {
+      console.log (error);
+      loading.dismiss ();
+      this.init_subscription_doctores ();
+    });
   }
 
   eliminar_doctor (doctor_id: string, telefono: string) {
@@ -221,5 +283,100 @@ subscription:Subscription;
       ]
     });
     alert.present();
+  }
+
+  doctor_checked (event: any, doctor: any) {
+    console.log (event);
+    if (event.value) {
+      if (!this.doctores_map.has (doctor.id)) {
+        this.doctores_map.set (doctor.id, {
+          doctor,
+          check: event
+        });
+      }
+    } else {
+      if (this.doctores_map.has (doctor.id)) {
+        this.doctores_map.delete (doctor.id);
+      }
+    }
+
+    console.log (this.doctores_map);
+  }
+
+  limpiar_map () {
+    this.doctores_map.forEach ((value: any) => {
+      value.check.value = false;
+    });
+
+    this.doctores_map.clear ();
+  }
+
+  enviar_mensaje () {
+    if (this.doctores_map.size <= 1) {
+      let doctor: any;
+      let index = 0;
+      this.doctores_map.forEach ((value: any) => {
+        if (index <= 0) {
+          doctor = value.doctor;
+        }
+        index++;
+      });
+
+      let profileModal = this.modalCtrl.create('MensajesPage',{
+        doctor: doctor,
+        tipo: 'directo'
+      });
+
+      profileModal.present ();
+    } else {
+      let doctores: any [] = [];
+      this.doctores_map.forEach ((value: any) => {
+        doctores.push (value.doctor);
+      });
+
+      let profileModal = this.modalCtrl.create ('MensajesPage',{
+        doctores: doctores,
+        tipo: 'multiple'
+      });
+
+      profileModal.present ();
+    }
+  }
+
+  enviar () {
+    var list: any [] = [];
+    this.listaDoctores_bak.forEach ((element: any) => {
+      // const data: any = {
+      //   'apellidos': element.apellidos,
+      //   'dni': element.dni,
+      //   'email': element.email,
+      //   'especialidades': element.especialidades,
+      //   'nombres': element.nombres,
+      //   'nro_colegiatura': element.nro_colegiatura,
+      //   'puntaje': element.puntaje,
+      //   'telefono': element.telefono,
+      //   'objectID': element.id
+      // };
+
+      list.push (element.id);
+      // const objectID = element.id;
+      // this.index.saveObject ({
+      //   objectID,
+      //   ...data
+      // });
+    });
+
+    console.log (list);
+    this.database.update_docs (list).then ((res: any) => {
+      console.log (res);
+    }, error => {
+      console.log (error);
+    });
+
+    // this.index.saveObjects (list).then ((res) => {
+    //   console.log (res);
+    // }).catch ((error: any) => {
+    //   console.log (error);
+    // });
   }
 }

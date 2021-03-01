@@ -77,7 +77,7 @@ listaImagenes = new Array<ItemImagen>();
           console.log(imagenes_procesadas)
           this.database.registrarImagenPlaca(this.placa, this.servicio, file_name).then(async _=>{
             if (imagenes_procesadas==total_imagenes){
-              // this.database.enviarNotificaciones(this.placa);
+              this.database.enviarNotificaciones(this.placa);
               loading.dismiss().then(_=>{
                 this.presentToast("Las imagenes fueron cargadas correctamente","exito");
                 if (loading!=null && loading!=undefined) this.dismiss();

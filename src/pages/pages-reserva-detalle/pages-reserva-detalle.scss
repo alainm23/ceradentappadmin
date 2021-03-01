@@ -1,50 +1,55 @@
 page-pages-reserva-detalle {
-.div-datos
-{
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-  .div-rectangulo
+  .div-datos
   {
-    width: 34px;
-    height: 68px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #707070;
-    font-family: helveticaneueregular;
-    font-size: 25px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      .div-rectangulo
+      {
+          width: 34px;
+          height: 68px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #707070;
+          font-family: helveticaneueregular;
+          font-size: 25px;
 
+      }
+      .div-btn
+      {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          width: 262px;
+          .btn-number
+          {
+              width: 32.7px;
+              height: 32.7px;
+              border-color: #707070;
+              border-style: solid;
+              border-width: 1px;
+              box-shadow: none;
+              color: #707070;
+              font-family: helveticaneueregular;
+              font-size: 13px;
+              border-radius: 0px;
+              margin: 0px;
+          }
+          .btn-cindo-cuadros
+          {
+              width: 52px !important;
+              height: 52px !important;
+          }
+      }
+      .div-btn-left
+      {
+          border-right: 0px;
+      }
+      .div-btn-rigth
+      {
+          border-left: 0px;
+      }
   }
-  .div-btn
-  {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    width: 240px;
-    .btn-number
-    {
-        width: 34px;
-        height: 34px;
-        --border-color: #707070;
-        --border-style: solid;
-        --border-width: 1px;
-        --box-shadow: none;
-        --color: #707070;
-        font-family: helveticaneueregular;
-        font-size: 13px;
-        --border-radius: 0px;
-        margin: 0px;
-    }
-  }
-  .div-btn-left
-  {
-      border-right: 0px;
-  }
-  .div-btn-rigth
-  {
-      border-left: 0px;
-  }
-}
 }

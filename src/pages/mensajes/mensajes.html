@@ -1,0 +1,126 @@
+<!--
+  Generated template for the MensajesPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons left>
+      <button (click)="close ()" ion-button icon-only>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title>Mensajes</ion-title>
+
+    <ion-buttons *ngIf="tipo === 'multiple'" right>
+      <ion-item color="primary" no-lines>
+        <ion-label>Enviar a todos</ion-label>
+        <ion-toggle [(ngModel)]="para_todos"></ion-toggle>
+      </ion-item>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab *ngIf="tipo === 'multiple'" bottom left>
+    <button [disabled]="para_todos" (click)="toggle_busqueda ()" ion-fab clear mini>
+      <ion-icon *ngIf="busqueda_doctores === false" name="add"></ion-icon>
+      <ion-icon *ngIf="busqueda_doctores === true" name="checkmark"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-grid no-padding style="height: 100%;">
+    <ion-row style="height: 100%;">
+      <ion-col style="height: 100%;" no-padding col-5 *ngIf="tipo === 'multiple'">
+        <ion-searchbar *ngIf="busqueda_doctores === true" class="ios" mode="ios" (ionInput)="onInput($event)" placeholder="Buscar doctor"></ion-searchbar>
+        <ion-list *ngIf="busqueda_doctores === false && para_todos === false" mode="ios">
+          <ion-item text-wrap no-lines padding *ngIf="doctores.length <= 0" text-center>
+            De click al boton de + para agregar doctores
+          </ion-item>
+
+          <ion-item text-wrap *ngFor="let item of doctores">
+            <ion-avatar item-start>
+              <img src="assets/imgs/icono_doctor.png">
+            </ion-avatar>
+
+            {{ item.nombres }} {{ item.apellidos }}
+            <button item-end (click)="eliminar_doctor (item)" clear color="danger" ion-button icon-only>
+              <ion-icon name="close"></ion-icon>
+            </button>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngIf="busqueda_doctores === false && para_todos === true" mode="ios">
+          <ion-item text-center text-wrap padding no-lines>
+            <ion-label>
+              Se enviara un mensaje a todos los doctores
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngIf="busqueda_doctores === true" mode="ios">
+          <ion-item text-wrap no-lines padding *ngIf="doctores_busqueda.length <= 0" text-center>
+            Ingresa el nombre del doctor que deseas agregar
+          </ion-item>
+          <ion-item text-wrap *ngFor="let item of doctores_busqueda">
+            {{ item.nombres }} {{ item.apellidos }}
+            <button *ngIf="validar_doctor_disponible (item)" item-end (click)="agregar_doctor (item)" clear ion-button icon-only>
+              <ion-icon name="add-circle"></ion-icon>
+            </button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col style="height: 100%;" no-padding col-5 *ngIf="tipo === 'directo'">
+        <ion-list no-lines>
+          <ion-list-header style="margin-bottom: 0px;">
+            Cliente
+          </ion-list-header>
+          <ion-item text-wrap>
+            <ion-avatar item-start>
+              <img src="assets/imgs/icono_doctor.png">
+            </ion-avatar>
+            {{ doctor?.nombres }} {{ doctor.apellidos }}
+          </ion-item>
+          <ion-list-header style="margin-bottom: 0px;">
+            Historial
+          </ion-list-header>
+
+          <ion-item (click)="reiniciar_mensaje ()">
+            <ion-icon item-start name="add-circle"></ion-icon>
+            Nuevo mensaje
+          </ion-item>
+
+          <ion-item *ngFor="let mensaje of historial_mensajes | orderBy: 'fecha' : true" (click)="ver_mensaje (mensaje)">
+            <ion-icon item-start name="chatbubbles"></ion-icon>
+            <h2>{{ mensaje.asunto }}</h2>
+            <p>{{ get_fecha_format (mensaje.fecha) }}</p>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+
+      <ion-col style="height: 100%;" col-1>
+        <div class="separator"></div>
+      </ion-col>
+
+      <ion-col style="height: 100%; padding-right: 4rem;" col-6>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <ion-list mode="ios">
+            <ion-item>
+              <ion-label color="primary" stacked>Asunto</ion-label>
+              <ion-input [readonly]="readonly" type="text" formControlName="asunto" placeholder=""></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label color="primary" stacked>Mensaje</ion-label>
+              <ion-textarea [readonly]="readonly" placeholder="" formControlName="mensaje"></ion-textarea>
+            </ion-item>
+          </ion-list>
+
+          <button *ngIf="readonly === false" type="submit" ion-button block [disabled]="form.invalid">Enviar</button>
+        </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators} from "@angular/forms";
   templateUrl: 'edit-doctor.html',
 })
 export class EditDoctorPage implements OnInit {
-doctorForm: FormGroup;  
+doctorForm: FormGroup;
 codigoDoctor:string;
 operacion:string;
 titulo:string;
@@ -985,7 +985,7 @@ countries = [ {
   dial_code: "+1 340",
   code: "VI"
 }];
-  
+
   constructor (
     public navCtrl: NavController,
     public database: DatabaseProvider,
@@ -998,20 +998,20 @@ countries = [ {
   ngOnInit(){
     if (this.navParams.get("operacion")!=undefined && this.navParams.get("operacion")!=null){
       this.operacion=this.navParams.get("operacion");
-      this.inicializarFormulario();  
+      this.inicializarFormulario();
       if (this.navParams.get("doctor")!=undefined && this.navParams.get("doctor")!=null) {
-        this.codigoDoctor=this.navParams.get("doctor");        
+        this.codigoDoctor=this.navParams.get("doctor");
         this.titulo="Editar Doctor";
         this.datosDoctor=this.database.getDoctorObservable(this.codigoDoctor);
       }else this.titulo="Registrar Doctor";
-    }    
+    }
     else{
       this.navCtrl.setRoot("DoctoresPage");
-    }   
+    }
   }
 
   inicializarFormulario(){
-    this.doctorForm = new FormGroup({      
+    this.doctorForm = new FormGroup({
       'nombres': new FormControl("",[Validators.required]),
       'apellidos': new FormControl("",[Validators.required]),
       'email': new FormControl(""),
@@ -1028,25 +1028,24 @@ countries = [ {
   }
 
   onSubmit(){
-          
-    const value= this.doctorForm.value; 
+
+    const value= this.doctorForm.value;
 
     if (this.operacion=="registrar"){
       let telefonoCompleto=value.codigotelefono+value.telefono;
       let loading = this.loadingCtrl.create({
-        content: "Registrando doctor...",              
+        content: "Registrando doctor...",
       })
       loading.present().then(_=>{
         this.database.existeTelefonoRegistrado(telefonoCompleto).then(async dataUsuario=>{
           if (dataUsuario){
             if (dataUsuario.isdoctor){
               if (loading!=null && loading!=undefined){
-                loading.dismiss().then(()=>{ 
+                loading.dismiss().then(()=>{
                   this.presentToast("El numero de celular "+ value.telefono+" ya esta registrado como doctor en la base de datos","error")
                 })
               }
-            } 
-            else{            
+            } else {
               let actual_rol="";
               let datosActuales:any;
               if (dataUsuario.iscliente) {
@@ -1054,18 +1053,17 @@ countries = [ {
                 await this.database.getCliente(dataUsuario.usuario).then(data=>{
                   datosActuales=data;
                 })
-              }
-              else{
+              } else {
                 actual_rol="administrador"
                 await this.database.getAdministrador(dataUsuario.usuario).then(data=>{
                   datosActuales=data;
                 })
               }
               loading.dismiss().then(()=>{
-                let prompt = this.alertCtrl.create({      
+                let prompt = this.alertCtrl.create({
                   title: "Usuario ya esta registrado",
                   subTitle: "El telefono ingresado ya pertenece al "+actual_rol+": "+datosActuales.nombres+" "+datosActuales.apellidos,
-                  message: "¿Si desea, puede crear un perfil de doctor para este usuario?, caso contrario verifique que haya digitado correctamente el numero de celular.",              
+                  message: "¿Si desea, puede crear un perfil de doctor para este usuario?, caso contrario verifique que haya digitado correctamente el numero de celular.",
                   buttons: [
                     { text: 'Cancelar',
                       role: "cancelar",
@@ -1074,49 +1072,49 @@ countries = [ {
                     { text: 'Crear perfil',
                       handler: data => {
                         let loading1 = this.loadingCtrl.create({
-                          content: "Registrando doctor...",              
+                          content: "Registrando doctor...",
                         })
                         loading1.present().then(()=>{
-                          this.database.registrarDoctorImagen(this.capitalizeFirstLetter(datosActuales.nombres), this.capitalizeFirstLetter(datosActuales.apellidos), datosActuales.email, datosActuales.dni, datosActuales.telefono, value.nro_colegiatura, value.especialidades, dataUsuario.usuario).then(_=>{             
-                            loading1.dismiss().then(()=>{                                    
-                              this.presentToast("El doctor fue registrado correctamente","exito")  
+                          this.database.registrarDoctorImagen(this.capitalizeFirstLetter(datosActuales.nombres), this.capitalizeFirstLetter(datosActuales.apellidos), datosActuales.email, datosActuales.dni, datosActuales.telefono, value.nro_colegiatura, value.especialidades, dataUsuario.usuario).then(_=>{
+                            loading1.dismiss().then(()=>{
+                              this.presentToast("El doctor fue registrado correctamente","exito")
                               this.navCtrl.pop();
-                            })              
-                          }) 
-                        })                           
+                            })
+                          })
+                        })
                       }
                     }
                   ]
                 });
-                prompt.present(); 
-              })                                
+                prompt.present();
+              })
             }
           }else{
             //guardamos la informacion
             this.database.registrarDoctorCompleto(this.capitalizeFirstLetter(value.nombres), this.capitalizeFirstLetter(value.apellidos), value.email, value.dni, telefonoCompleto, value.nro_colegiatura, value.especialidades).then(_=>{
               loading.dismiss().then(()=>{
-                this.presentToast("El doctor fue registrado correctamente","exito")  
+                this.presentToast("El doctor fue registrado correctamente","exito")
                 this.navCtrl.pop();
-              })            
+              })
             })
           }
         })
       })
-      
+
     }else{
       //actualizamos solamente los datos del doctor
       let loading:any = this.loadingCtrl.create({
-        content: "actualizando...",              
+        content: "actualizando...",
       })
       loading.present().then(_=>{
         this.database.actualizarDatosDoctor(this.capitalizeFirstLetter(value.nombres), this.capitalizeFirstLetter(value.apellidos), value.email, value.dni, value.nro_colegiatura, value.especialidades, this.codigoDoctor, value.telefono).then(_=>{
           loading.dismiss().then(()=>{
-            this.presentToast("La informacion fue registrada correctamente","exito")  
+            this.presentToast("La informacion fue registrada correctamente","exito")
             this.navCtrl.pop();
           })
         })
       })
-      
+
     }
   }
 
@@ -1137,7 +1135,7 @@ countries = [ {
         cssClass: "toast-error"
       });
       toast.present();
-    }    
+    }
   }
 
 }

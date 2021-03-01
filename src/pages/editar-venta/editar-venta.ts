@@ -496,7 +496,9 @@ export class EditarVentaPage implements OnInit {
                       this.database.delete_reserva (this.reserva.id).then (() => {
                         loading.dismiss().then(()=>{
                           this.presentToast("La venta se registro correctamente","exito")
-                          this.navCtrl.pop ();
+                          this.navCtrl.setRoot ('ReservasListaPage', {
+                            sucursal: this.codigoSucursal
+                          });
                         });
                       }, error => {
                         console.log (error);

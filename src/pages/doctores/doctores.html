@@ -1,42 +1,65 @@
 <ion-header>
-    <ion-navbar color="primary">
-      <button ion-button menuToggle>
-        <ion-icon name="menu"></ion-icon>
+  <ion-toolbar *ngIf="doctores_map.size <= 0" color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Lista de Doctores
+    </ion-title>
+    <ion-buttons end>
+      <button (click)="registrarDoctor()" ion-button icon-only>
+        Registrar Doctor&nbsp;<ion-icon name="add-circle"></ion-icon>
       </button>
-      <ion-title>
-        Lista de Doctores
-      </ion-title>
-      <ion-buttons end>
-        <button (click)="registrarDoctor()" ion-button icon-only>
-          Registrar Doctor&nbsp;<ion-icon name="add-circle"></ion-icon>
-        </button>
-        <button (click)="exportarDoctores()" ion-button icon-only>
-          Exportar Doctor&nbsp;<ion-icon name="add-circle"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-navbar>
-  </ion-header>
+      <button (click)="exportarDoctores()" ion-button icon-only>
+        Exportar Doctor&nbsp;<ion-icon name="download"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 
-  <ion-content padding class="fondo">
-    <ion-grid style="margin-top:1rem;">
-      <ion-row>
-        <ion-searchbar (ionInput)="onInput($event)" style="width:100%; max-width:100%" placeholder="Buscar doctor por apellido Ejemplo: Jimenez"></ion-searchbar>
-        <ion-col *ngFor="let item of listaDoctores | orderBy: 'nombres'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
-          <ion-item>
-            <ion-avatar item-start>
-              <img src="assets/imgs/icono_doctor.png">
-            </ion-avatar>
+  <ion-toolbar *ngIf="doctores_map.size > 0" color="primary">
+    <ion-buttons left>
+      <button (click)="limpiar_map ()" ion-button icon-only>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title>
+      {{ doctores_map.size }} seleccionado(s)
+    </ion-title>
+
+    <ion-buttons right>
+      <button (click)="enviar_mensaje ()" ion-button icon-end>
+        Enviar mensaje
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="fondo">
+  <!-- <button (click)="enviar ()">Enviar</button> -->
+  <ion-grid style="margin-top:1rem;">
+    <ion-row>
+      <ion-searchbar (ionInput)="onInput($event)" style="width:100%; max-width:100%" placeholder="Buscar doctor por apellido Ejemplo: Jimenez"></ion-searchbar>
+      <ion-col *ngFor="let item of listaDoctores | orderBy: 'nombres'" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+        <ion-item>
+          <ion-checkbox (ionChange)="doctor_checked ($event, item)" item-start></ion-checkbox>
+          <ion-avatar item-start>
+            <img src="assets/imgs/icono_doctor.png">
+          </ion-avatar>
+          <ion-label>
             <h2>{{item.nombres}} {{item.apellidos}}</h2>
             <p style="color:#999999;">cel. {{item.telefono}} - email: {{item.email}}</p>
             <p style="color:#999999;">Puntaje: {{item.puntaje}}</p>
             <p style="color:#999999;" *ngIf="item.dataNumero!=undefined">Clientes derivados: {{item.dataNumero.nro_placas}}</p>
             <p style="color:#999999;" *ngIf="item.dataNumero==undefined">Clientes derivados: 0</p>
-            <button item-end (click)="openOpcionesDoctor(item.id, item.telefono)" color="primary" ion-button icon-only clear=true>
-              <ion-icon name="more"></ion-icon>
-            </button>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+          </ion-label>
+          <button item-end (click)="openOpcionesDoctor(item.id, item.telefono)" color="primary" ion-button icon-only clear=true>
+            <ion-icon name="more"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  </ion-content>
+</ion-content>

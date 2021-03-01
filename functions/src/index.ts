@@ -8,14 +8,13 @@ const index = client.initIndex ('Doctores');
 exports.add_doctor = functions.firestore.document ('Doctores/{id}').onCreate (async (snapshot: any, context: any) => {
   const data: any = {
     'apellidos': snapshot.data ().apellidos,
-    'direccion': snapshot.data ().direccion,
     'dni': snapshot.data ().dni,
     'email': snapshot.data ().email,
     'especialidades': snapshot.data ().especialidades,
     'nombres': snapshot.data ().nombres,
     'nro_colegiatura': snapshot.data ().nro_colegiatura,
     'puntaje': snapshot.data ().puntaje,
-    'telefono': snapshot.data ().telefono,
+    'telefono': snapshot.data ().telefono
   };
 
   const objectID = snapshot.id;
@@ -25,10 +24,9 @@ exports.add_doctor = functions.firestore.document ('Doctores/{id}').onCreate (as
   });
 });
 
-exports.update_doctor = functions.firestore.document ('Doctores/{id}').onUpdate (async (snapshot: any, context: any) => {
+exports.update_doctor = functions.firestore.document ('Doctores/{id}').onUpdate (async (snapshot: functions.Change<functions.firestore.QueryDocumentSnapshot>, context: any) => {
   const data: any = {
     'apellidos': snapshot.after.data ().apellidos,
-    'direccion': snapshot.after.data ().direccion,
     'dni': snapshot.after.data ().dni,
     'email': snapshot.after.data ().email,
     'especialidades': snapshot.after.data ().especialidades,
@@ -36,12 +34,15 @@ exports.update_doctor = functions.firestore.document ('Doctores/{id}').onUpdate 
     'nro_colegiatura': snapshot.after.data ().nro_colegiatura,
     'puntaje': snapshot.after.data ().puntaje,
     'telefono': snapshot.after.data ().telefono,
+    'objectID': snapshot.after.id
   };
 
-  const objectID = snapshot.after.id;
-  return index.saveObject ({
-    objectID,
-    ...data
+  console.log (data);
+
+  return index.saveObject (data).then ((res: any) => {
+    console.log (res);
+  }).catch ((error: any) => {
+    console.log (error);
   });
 });
 

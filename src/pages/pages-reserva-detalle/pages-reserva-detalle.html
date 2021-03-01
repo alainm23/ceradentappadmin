@@ -9,7 +9,7 @@
     <ion-title>Reserva detalle | {{ doctor?.nombres }} {{ doctor?.apellidos }} | {{ get_fecha_format (reserva?.fecha_registrada) }}</ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only>
+      <button (click)="eliminar ()" ion-button icon-only>
         <ion-icon name="trash"></ion-icon>
       </button>
 
@@ -60,16 +60,52 @@
             <ion-list-header>
               Derechos
             </ion-list-header>
-            <ion-item *ngFor="let item of reserva?.servicio_extras?.tomografia_volumetrica_derecho">
-              - {{ item }}
-            </ion-item>
+            <div class="div-datos" style="margin-left: 2rem;">
+              <div class="div-btn div-btn-left">
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.8') ? 'selected' : 'light'" class="btn-number">1.8</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.7') ? 'selected' : 'light'" class="btn-number">1.7</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.6') ? 'selected' : 'light'" class="btn-number">1.6</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.5') ? 'selected' : 'light'" class="btn-number">1.5</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.4') ? 'selected' : 'light'" class="btn-number">1.4</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.3') ? 'selected' : 'light'" class="btn-number">1.3</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.2') ? 'selected' : 'light'" class="btn-number">1.2</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '1.1') ? 'selected' : 'light'" class="btn-number">1.1</button>
+                <!--<div>&nbsp;</div>-->
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.8') ? 'selected' : 'light'" class="btn-number">4.8</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.7') ? 'selected' : 'light'" class="btn-number">4.7</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.6') ? 'selected' : 'light'" class="btn-number">4.6</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.5') ? 'selected' : 'light'" class="btn-number">4.5</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.4') ? 'selected' : 'light'" class="btn-number">4.4</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.3') ? 'selected' : 'light'" class="btn-number">4.3</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.2') ? 'selected' : 'light'" class="btn-number">4.2</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_derecho, '4.1') ? 'selected' : 'light'" class="btn-number">4.1</button>
+              </div>
+            </div>
 
             <ion-list-header>
               Izquierdos
             </ion-list-header>
-            <ion-item *ngFor="let item of reserva?.servicio_extras?.tomografia_volumetrica_izq">
-              - {{ item }}
-            </ion-item>
+            <div class="div-datos" style="margin-left: 2rem;">
+              <div class="div-btn div-btn-left">
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.1') ? 'selected' : 'light'" class="btn-number">2.1</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.2') ? 'selected' : 'light'" class="btn-number">2.2</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.3') ? 'selected' : 'light'" class="btn-number">2.3</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.4') ? 'selected' : 'light'" class="btn-number">2.4</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.5') ? 'selected' : 'light'" class="btn-number">2.5</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.6') ? 'selected' : 'light'" class="btn-number">2.6</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.7') ? 'selected' : 'light'" class="btn-number">2.7</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '2.8') ? 'selected' : 'light'" class="btn-number">2.8</button>
+                <!--<div>&nbsp;</div>-->
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.1') ? 'selected' : 'light'" class="btn-number">3.1</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.2') ? 'selected' : 'light'" class="btn-number">3.2</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.3') ? 'selected' : 'light'" class="btn-number">3.3</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.4') ? 'selected' : 'light'" class="btn-number">3.4</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.5') ? 'selected' : 'light'" class="btn-number">3.5</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.6') ? 'selected' : 'light'" class="btn-number">3.6</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.7') ? 'selected' : 'light'" class="btn-number">3.7</button>
+                <button ion-button mode="ios" [color]="validar_color (tomografia_volumetrica_izq, '3.8') ? 'selected' : 'light'" class="btn-number">3.8</button>
+              </div>
+            </div>
 
             <ion-list-header>
               Observacion
@@ -196,30 +232,90 @@
           <ion-list-header>
             Derechos 01
           </ion-list-header>
-          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_d_01">
-            - {{ item }}
-          </ion-item>
+
+          <div class="div-datos" style="margin-left: 2rem;">
+            <div class="div-btn div-btn-left">
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.8') ? 'selected' : 'light'" class="btn-number">1.8</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.7') ? 'selected' : 'light'" class="btn-number">1.7</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.6') ? 'selected' : 'light'" class="btn-number">1.6</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.5') ? 'selected' : 'light'" class="btn-number">1.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.4') ? 'selected' : 'light'" class="btn-number">1.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.3') ? 'selected' : 'light'" class="btn-number">1.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.2') ? 'selected' : 'light'" class="btn-number">1.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '1.1') ? 'selected' : 'light'" class="btn-number">1.1</button>
+              <!--<div>&nbsp;</div>-->
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.8') ? 'selected' : 'light'" class="btn-number">4.8</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.7') ? 'selected' : 'light'" class="btn-number">4.7</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.6') ? 'selected' : 'light'" class="btn-number">4.6</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.5') ? 'selected' : 'light'" class="btn-number">4.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.4') ? 'selected' : 'light'" class="btn-number">4.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.3') ? 'selected' : 'light'" class="btn-number">4.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.2') ? 'selected' : 'light'" class="btn-number">4.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_01, '4.1') ? 'selected' : 'light'" class="btn-number">4.1</button>
+            </div>
+          </div>
 
           <ion-list-header>
             Izquierdo 01
           </ion-list-header>
-          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_i_01">
-            - {{ item }}
-          </ion-item>
+
+          <div class="div-datos" style="margin-left: 2rem;">
+            <div class="div-btn div-btn-left">
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.1') ? 'selected' : 'light'" class="btn-number">2.1</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.2') ? 'selected' : 'light'" class="btn-number">2.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.3') ? 'selected' : 'light'" class="btn-number">2.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.4') ? 'selected' : 'light'" class="btn-number">2.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.5') ? 'selected' : 'light'" class="btn-number">2.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.6') ? 'selected' : 'light'" class="btn-number">2.6</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.7') ? 'selected' : 'light'" class="btn-number">2.7</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '2.8') ? 'selected' : 'light'" class="btn-number">2.8</button>
+              <!--<div>&nbsp;</div>-->
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.1') ? 'selected' : 'light'" class="btn-number">3.1</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.2') ? 'selected' : 'light'" class="btn-number">3.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.3') ? 'selected' : 'light'" class="btn-number">3.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.4') ? 'selected' : 'light'" class="btn-number">3.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.5') ? 'selected' : 'light'" class="btn-number">3.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.6') ? 'selected' : 'light'" class="btn-number">3.6</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.7') ? 'selected' : 'light'" class="btn-number">3.7</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_01, '3.8') ? 'selected' : 'light'" class="btn-number">3.8</button>
+            </div>
+          </div>
 
           <ion-list-header>
             Derechos 02
           </ion-list-header>
-          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_d_02">
-            - {{ item }}
-          </ion-item>
+          <div class="div-datos" style="margin-left: 2rem;">
+            <div class="div-btn div-btn-left">
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '5.5') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">5.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '5.4') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">5.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '5.3') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">5.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '5.2') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">5.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '5.1') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">5.1</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '8.5') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">8.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '8.4') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">8.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '8.3') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">8.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '8.2') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">8.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_d_02, '8.1') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">8.1</button>
+            </div>
+          </div>
 
           <ion-list-header>
             Izquierdo 02
           </ion-list-header>
-          <ion-item *ngFor="let item of reserva?.servicio_extras?.radio_intra_i_02">
-            - {{ item }}
-          </ion-item>
+          <div class="div-datos" style="margin-left: 2rem;">
+            <div class="div-btn div-btn-left">
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '6.1') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">6.1</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '6.2') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">6.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '6.3') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">6.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '6.4') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">6.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '6.5') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">6.5</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '7.1') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">7.1</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '7.2') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">7.2</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '7.3') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">7.3</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '7.4') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">7.4</button>
+              <button ion-button mode="ios" [color]="validar_color (radio_intra_i_02, '7.5') ? 'selected' : 'light'" class="btn-number btn-cindo-cuadros">7.5</button>
+            </div>
+          </div>
         </ion-card>
       </ion-col>
 

@@ -102,7 +102,7 @@ subscription:Subscription;
                               this.events.publish('user:login');
                               this.navCtrl.setRoot(HomePage,{"telefono": phoneNumberString, "codigoUsuario": dataUsuario.usuario});
                             })
-                          })
+                          });
                         //})
                       },(error)=>{
                         this.loading.dismiss().then(()=>{

@@ -13,7 +13,7 @@
       <button (click)="openReservas ()" id="notification-button" ion-button icon-end>
         Ver ordenes
         <ion-icon name="eye">
-          <ion-badge id="notifications-badge" color="danger">
+          <ion-badge *ngIf="ordenes.length > 0" id="notifications-badge" color="danger">
             {{ ordenes.length }}
           </ion-badge>
         </ion-icon>

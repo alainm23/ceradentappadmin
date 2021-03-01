@@ -548,11 +548,12 @@ export class DatabaseProvider {
   }
 
   getHistorialPago(placa:string){
-    return this.db.collection('Placas').doc(placa).collection('Pagos').valueChanges();
+    return this.db.collection('Placas').doc(placa).collection('Pagos').valueChanges ();
   }
 
-  getDoctores(){
-    const collection= this.db.collection('Doctores');
+  getDoctoresLimit (value: number) {
+    let collection = this.db.collection ('Doctores', ref => ref.limit (value));
+
     return collection.snapshotChanges().pipe(map(refReferencias=>{
       if (refReferencias.length>0){
         return refReferencias.map(refReferencia=>{
@@ -563,7 +564,37 @@ export class DatabaseProvider {
       }
     })).mergeMap(observables =>{
       if (observables) return combineLatest(observables); else return of([]);
+    });
+  }
+
+  getDoctores () {
+    const collection = this.db.collection ('Doctores');
+    return collection.snapshotChanges ().pipe (map (refReferencias=>{
+      if (refReferencias.length > 0){
+        return refReferencias.map(refReferencia => {
+            const data:any = refReferencia.payload.doc.data ();
+            data.id= refReferencia.payload.doc.id;
+            return this.getNumeroPlacasDoctor (data.id).pipe (map(dataNumero=> Object.assign({},{dataNumero, ...data})));
+        })
+      }
+    })).mergeMap(observables =>{
+      if (observables) return combineLatest(observables); else return of([]);
     })
+  }
+
+  get_doctores () {
+    const collection = this.db.collection ('Doctores');
+    return collection.snapshotChanges ().pipe (map(refReferencias=>{
+      if (refReferencias.length > 0){
+        return refReferencias.map(refReferencia=>{
+            const data:any = refReferencia.payload.doc.data();
+            data.id= refReferencia.payload.doc.id;
+            return this.getNumeroPlacasDoctor(data.id).pipe(map(dataNumero=> Object.assign({},{dataNumero, ...data})));
+        })
+      }
+    })).mergeMap(observables =>{
+      if (observables) return combineLatest(observables); else return of([]);
+    });
   }
 
   getClientesLetra(letra:string){
@@ -1607,7 +1638,7 @@ export class DatabaseProvider {
 
   }
 
-  async enviarNotificaciones(placa:string){
+  async enviarNotificaciones (placa:string) {
     let datos_placa=await this.getPlacaEstatic(placa);
     //console.log(datos_placa);
     let datos_doctor=await this.getDoctor(datos_placa.doctor);
@@ -1615,7 +1646,7 @@ export class DatabaseProvider {
     let url = "https://api.ceradentperu.com/api/send-notification-ceradent";
     //let telefono_doctor:any="";
     //let telefono_cliente:any="";
-    if (datos_doctor.telefono!=undefined && datos_doctor.telefono!=""){
+    if (datos_doctor.telefono!=undefined && datos_doctor.telefono!="") {
       //telefono_doctor=await this.existeTelefonoRegistrado(datos_doctor.telefono);
       let data_doctor = {
         titulo: 'Nueva placa registrada',
@@ -1625,48 +1656,54 @@ export class DatabaseProvider {
         clave: 'placa',
         tokens: datos_placa.doctor
       };
-      return this.http.post (url, data_doctor).subscribe(async rpta=>{
-        console.log(rpta);
-        if (datos_cliente.telefono!=undefined && datos_cliente.telefono!=""){
-          //telefono_cliente=await this.existeTelefonoRegistrado(datos_cliente.telefono);
-          let data_cliente = {
-            titulo: 'Nueva placa registrada',
-            detalle: 'Nueva placa - Doctor: '+datos_doctor.nombres+' '+datos_doctor.apellidos+' - '+datos_placa.nombres_servicios,
-            destino: 'clientes',
-            mode: 'tags',
-            clave: 'placa',
-            tokens: datos_placa.cliente
-          };
-          return this.http.post (url, data_cliente).subscribe(rpta2=>{
-            console.log('Notificaciones enviadas a ambos');
-            return 1;
-          });
-        }else {
-          console.log('Notificaciones enviadas solo al doctor');
-          return 1;
-        }
-      })
-    }else{
-      if (datos_cliente.telefono!=undefined && datos_cliente.telefono!=""){
-        //telefono_cliente=await this.existeTelefonoRegistrado(datos_cliente.telefono);
-        let data_cliente = {
-          titulo: 'Nueva placa registrada',
-          detalle: 'Nueva placa - Doctor: '+datos_doctor.nombres+' '+datos_doctor.apellidos+' - '+datos_placa.nombres_servicios,
-          destino: 'clientes',
-          mode: 'tags',
-          clave: 'placa',
-          tokens: datos_placa.cliente
-        };
-        return this.http.post (url, data_cliente).subscribe(rpta2=>{
-          console.log('Notificaciones enviadas solo usuario');
-          return 1;
-        });
-      }else {
-        console.log('No se envio notitificaciones a ninguno');
-        return 0;
-      }
-    }
 
+      console.log ('data_doctor', data_doctor);
+
+      this.http.post (url, data_doctor).subscribe (async rpta => {
+        console.log(rpta);
+        // if (datos_cliente.telefono!=undefined && datos_cliente.telefono!=""){
+        //   //telefono_cliente=await this.existeTelefonoRegistrado(datos_cliente.telefono);
+        //   let data_cliente = {
+        //     titulo: 'Nueva placa registrada',
+        //     detalle: 'Nueva placa - Doctor: '+datos_doctor.nombres+' '+datos_doctor.apellidos+' - '+datos_placa.nombres_servicios,
+        //     destino: 'clientes',
+        //     mode: 'tags',
+        //     clave: 'placa',
+        //     tokens: datos_placa.cliente
+        //   };
+        //   return this.http.post (url, data_cliente).subscribe(rpta2=>{
+        //     console.log('Notificaciones enviadas a ambos');
+        //   });
+        // }else {
+        //   console.log('Notificaciones enviadas solo al doctor');
+        // }
+      })
+    }
+    // else {
+    //   if (datos_cliente.telefono!=undefined && datos_cliente.telefono!=""){
+    //     //telefono_cliente=await this.existeTelefonoRegistrado(datos_cliente.telefono);
+    //     let data_cliente = {
+    //       titulo: 'Nueva placa registrada',
+    //       detalle: 'Nueva placa - Doctor: '+datos_doctor.nombres+' '+datos_doctor.apellidos+' - '+datos_placa.nombres_servicios,
+    //       destino: 'clientes',
+    //       mode: 'tags',
+    //       clave: 'placa',
+    //       tokens: datos_placa.cliente
+    //     };
+    //     return this.http.post (url, data_cliente).subscribe(rpta2=>{
+    //       console.log('Notificaciones enviadas solo usuario');
+    //       return 1;
+    //     });
+    //   }else {
+    //     console.log('No se envio notitificaciones a ninguno');
+    //     return 0;
+    //   }
+    // }
+  }
+
+  enviar_notificacion_mensaje (data: any) {
+    let url = "https://api.ceradentperu.com/api/send-notification-ceradent";
+    return this.http.post (url, data);
   }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
@@ -1741,5 +1778,53 @@ export class DatabaseProvider {
 
   get_ordenes_badge () {
     return this.db.collection ('Doctor_Reservas', ref => ref.where ('visto', '==', false)).valueChanges ();
+  }
+
+  enviar_mensaje (doctor_id: string, mensaje: any) {
+    return this.db.collection ('Doctores').doc (doctor_id).collection ('Mensajes').doc (mensaje.id).set (mensaje);
+  }
+
+  enviar_mensaje_todos (mensaje: any) {
+    return this.db.collection ('Mensajes_Todos').doc (mensaje.id).set (mensaje);
+  }
+
+  get_mensajes_todos () {
+    return this.db.collection ('Mensajes_Todos').valueChanges ();
+  }
+
+  async enviar_mensaje_doctores (mensaje: any, doctores: any []) {
+    let batch = this.db.firestore.batch ();
+
+    doctores.forEach ((doctor: any) => {
+      batch.set (
+        this.db.collection ('Doctores').doc (doctor.id).collection ('Mensajes').doc (mensaje.id).ref,
+        mensaje
+      )
+    });
+
+    return await batch.commit ();
+  }
+
+  async update_docs (list: any []) {
+    let batch = this.db.firestore.batch ();
+
+    list.forEach ((id: string) => {
+      batch.update (this.db.collection ('Doctores').doc (id).ref, {
+        puntaje: 0
+      })
+    });
+
+    return await batch.commit ();
+  }
+
+  get_historial_mensajes (doctor_id: string) {
+    // return this.db.collection ('Doctores').doc (doctor_id).collection ('Mensajes', ref => ref.orderBy ('fecha', 'desc')).valueChanges ();
+
+    const fooPosts = this.db.collection ('Doctores').doc (doctor_id).collection ('Mensajes', ref => ref.orderBy ('fecha', 'desc')).valueChanges ();
+    const barPosts = this.db.collection ('Mensajes_Todos').valueChanges ();
+
+    return combineLatest<any[]>(fooPosts, barPosts).pipe (
+      map(arr => arr.reduce((acc, cur) => acc.concat(cur) ) ),
+    );
   }
 }

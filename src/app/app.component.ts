@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Platform, Nav } from 'ionic-angular';
+import { Platform, Nav, ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +26,7 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     public database: DatabaseProvider,
+    public modalCtrl: ModalController,
     public events: Events) {
     events.subscribe('user:login', () => {
       this.cargarMenu();
@@ -118,6 +119,15 @@ export class MyApp {
 
   openInsumos(){
     this.nav.setRoot("InsumosPage");
+  }
+
+  openMensajes () {
+    let profileModal = this.modalCtrl.create ('MensajesPage',{
+      doctores: [],
+      tipo: 'multiple'
+    });
+
+    profileModal.present ();
   }
 
   ngOnDestroy(){
