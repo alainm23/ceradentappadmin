@@ -16,7 +16,7 @@
 <ion-content padding>
   <ion-grid style="margin-top:1rem;">
     <ion-row>
-      <ion-col *ngFor="let item of items" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
+      <ion-col *ngFor="let item of items | orderBy: 'fecha_registrada': true" col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6>
         <ion-item (click)="ver_detalle (item)">
           <ion-badge *ngIf="item.visto === false" style="border-radius: 50%;" item-start color="success">
             &nbsp;
@@ -26,7 +26,7 @@
           </ion-avatar>
           <h2>Paciente: {{ item.cliente_nombres }}</h2>
           <h2>DNI: {{ item.cliente_dni }}</h2>
-          <h2>Doctor: {{ item.doctor.nombres }}</h2>
+          <h2>Doctor: {{ item.doctor.nombres }} {{ item.doctor.apellidos }}</h2>
           <h2>Fecha: {{ get_fecha_format (item.fecha_registrada) }}</h2>
           <button item-end outline ion-button>
             Ver
